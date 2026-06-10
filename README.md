@@ -2,6 +2,12 @@
 
 自动追踪 LLM 前沿技术的周报 Agent，聚焦**预训练 / 后训练 / LLM Agent** 三大方向，支持 arXiv 论文 + 中英文社区多源聚合，每周生成结构化 HTML 周报，可选推送到 Telegram。
 
+## 📖 在线阅读
+
+**归档首页**（所有历史周报）：https://dimker1.github.io/llm_research_agent/
+
+每次运行后自动更新，点击对应周次即可阅读。
+
 ## 快速开始
 
 ### 1. 安装依赖
