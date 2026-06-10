@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LLM 周报 | 2026-W24</title>
+  <style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface2: #273349;
+  --border: #334155;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-bright: #f8fafc;
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --code-bg: #0d1117;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+a { color: var(--primary-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 45%, #042f2e 100%);
+  padding: 56px 24px 44px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99,102,241,.18), transparent);
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(99,102,241,.2);
+  border: 1px solid var(--primary);
+  color: var(--primary-light);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 14px; border-radius: 999px;
+  margin-bottom: 18px;
+  position: relative;
+}
+.hero h1 {
+  font-size: clamp(22px, 4vw, 38px);
+  font-weight: 800; color: var(--text-bright);
+  line-height: 1.2; margin-bottom: 10px;
+  position: relative;
+}
+.hero h1 span { color: var(--primary-light); }
+.hero-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; position: relative; }
+.hero-meta {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;
+  font-size: 13px; color: var(--text-muted); position: relative;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+/* LAYOUT */
+.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+.content { padding: 44px 0 72px; }
+
+/* STATS */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px; margin-bottom: 40px;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; text-align: center;
+}
+.stat-value { font-size: 30px; font-weight: 800; color: var(--primary-light); line-height: 1; margin-bottom: 6px; }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .07em; }
+
+/* SECTION */
+.section { margin-bottom: 48px; }
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 2px solid;
+}
+.section-header.pretraining { border-color: #6366f1; }
+.section-header.post_training { border-color: #10b981; }
+.section-header.agent { border-color: #f59e0b; }
+.section-icon { font-size: 22px; }
+.section-title { font-size: 18px; font-weight: 700; color: var(--text-bright); }
+.section-count {
+  margin-left: auto; font-size: 12px; font-weight: 600;
+  padding: 2px 10px; border-radius: 999px;
+  background: rgba(99,102,241,.15); color: var(--primary-light);
+}
+.section-header.post_training .section-count { background: rgba(16,185,129,.15); color: #6ee7b7; }
+.section-header.agent .section-count { background: rgba(245,158,11,.15); color: #fcd34d; }
+
+/* ITEM CARD */
+.item-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; margin-bottom: 14px;
+  transition: border-color .2s;
+}
+.item-card:hover { border-color: var(--primary); }
+.item-title {
+  font-size: 15px; font-weight: 700; color: var(--text-bright);
+  margin-bottom: 10px; line-height: 1.4;
+}
+.item-title a { color: var(--text-bright); }
+.item-title a:hover { color: var(--primary-light); text-decoration: none; }
+.item-meta {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  margin-bottom: 12px; font-size: 12px; color: var(--text-muted);
+}
+.meta-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(148,163,184,.1); border-radius: 6px;
+  padding: 3px 8px; white-space: nowrap;
+}
+.meta-badge strong { color: var(--text-bright); }
+.score-badge {
+  background: rgba(99,102,241,.2); color: #a5b4fc;
+  border-radius: 6px; padding: 3px 8px; font-weight: 700;
+}
+.score-9, .score-10 { background: rgba(16,185,129,.2); color: #6ee7b7; }
+.score-7, .score-8 { background: rgba(99,102,241,.2); color: #a5b4fc; }
+.score-5, .score-6 { background: rgba(245,158,11,.15); color: #fcd34d; }
+.keywords { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.kw {
+  font-size: 11px; font-family: 'SF Mono', Consolas, monospace;
+  background: rgba(99,102,241,.15); color: #c4b5fd;
+  border-radius: 4px; padding: 2px 7px;
+}
+.summary {
+  font-size: 13px; color: var(--text-muted); line-height: 1.7;
+  border-left: 3px solid var(--border);
+  padding-left: 12px; margin-top: 8px;
+}
+.empty-section {
+  color: var(--text-muted); font-size: 14px; font-style: italic;
+  padding: 16px 0;
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border); padding: 22px;
+  text-align: center; font-size: 12px; color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">LLM 前沿技术周报</div>
+  <h1>📚 <span>2026-W24</span> 周报</h1>
+  <p class="hero-sub">覆盖时间：2026-06-08 → 2026-06-10</p>
+  <p class="hero-sub">来源：<strong>arxiv</strong>(500) &nbsp;|&nbsp; <strong>量子位</strong>(10) &nbsp;|&nbsp; <strong>AheadOfAI</strong>(20) &nbsp;|&nbsp; <strong>ImportAI</strong>(20) &nbsp;|&nbsp; <strong>Interconnects</strong>(20) &nbsp;|&nbsp; <strong>TheGradient</strong>(15) &nbsp;|&nbsp; <strong>LastWeekInAI</strong>(20) &nbsp;|&nbsp; <strong>Reddit_ML</strong>(25) &nbsp;|&nbsp; <strong>Reddit_LocalLLaMA</strong>(25)</p>
+  <div class="hero-meta">
+    <span>📄 精选 20 条内容</span>
+    <span>🏗️ 预训练 0 条</span>
+    <span>🎯 后训练 10 条</span>
+    <span>🤖 Agent 10 条</span>
+  </div>
+</div>
+
+<div class="container content">
+  
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-value">20</div>
+    <div class="stat-label">精选总条目</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#818cf8">0</div>
+    <div class="stat-label">🏗️ 预训练</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#6ee7b7">10</div>
+    <div class="stat-label">🎯 后训练</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#fcd34d">10</div>
+    <div class="stat-label">🤖 LLM Agent</div>
+  </div>
+</div>
+  
+<div class="section">
+  <div class="section-header pretraining">
+    <span class="section-icon">🏗️</span>
+    <span class="section-title">预训练方向</span>
+    <span class="section-count">0 条</span>
+  </div>
+  <p class="empty-section">本周暂无相关内容</p>
+</div>
+<div class="section">
+  <div class="section-header post_training">
+    <span class="section-icon">🎯</span>
+    <span class="section-title">后训练方向</span>
+    <span class="section-count">10 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.09735v1" target="_blank" rel="noopener">The Neutral Mask: How RLHF Provides Shallow Alignment while Leaving Partisan Structure Intact in a Large Language Model</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Wendy K. Tam</span>
+  </div>
+  <div class="keywords"><span class="kw">RLHF</span><span class="kw">alignment</span><span class="kw">sparse autoencoder</span><span class="kw">partisan bias</span><span class="kw">representation geometry</span></div>
+  <div class="summary">本文对Llama 3.1 8B在RLHF前后的内部表示进行机制性对比研究，揭示RLHF并未真正消除模型中的党派政治结构，而是通过压缩党派信号的方差来产生表面中立的输出。稀疏自编码器分析表明，基础模型中偶发激活的政策编码特征在指令模型中完全失活，说明RLHF切断了从党派几何结构到输出生成的因果路径，而非删除该结构。特征级引导实验进一步证实了这种因果断联，绕过RLHF护栏的机制（如推断并放大用户党派身份）可重新激活党派生成。研究表明RLHF编码的是功能性中立而非结构性中立，对齐模型的行为可能比其输出所呈现的更为脆弱。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.09380v1" target="_blank" rel="noopener">Reasoning Arena: Trace Tournaments When Verifiable Rewards Fall Short</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Han Zhou, Adam X. Yang, Laurence Aitchison 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">Bradley-Terry model</span><span class="kw">trace tournament</span><span class="kw">relative reward</span><span class="kw">reasoning</span></div>
+  <div class="summary">本文提出了Reasoning Arena框架，针对基于可验证奖励的强化学习（RLVR）在组内所有样本奖励相同时无法提供梯度信号的问题。该框架将这类无效奖励组路由到裁判系统，通过构建推理轨迹锦标赛进行逐对比较，将推理质量转化为细粒度相对奖励信号。为提升效率，使用动态锚点池替代穷举比较，并拟合Bradley-Terry模型在不完整比较图上估计排名，避免了二次复杂度的成对比较。实验表明，该方法在竞赛数学和编程基准上平均提升7.6%，训练效率提升27%至41%，并节省约50%的生成算力。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.09124v1" target="_blank" rel="noopener">A Regret Minimization Framework on Preference Learning in Large Language Models</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Suhwan Kim, Taehyun Cho, Geon-Hyeong Kim 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLHF</span><span class="kw">Regret Minimization</span><span class="kw">Preference Optimization</span><span class="kw">DPO</span><span class="kw">RLVR</span></div>
+  <div class="summary">本文提出了基于遗憾最小化的偏好优化框架RePO，将RLHF重新定义为遗憾最小化问题而非奖励最大化问题。该框架认为人类偏好往往由对结果的前瞻性预期和对替代行为的反事实比较所塑造，而非即时的独立效用。RePO通过将偏好建模为以行为为条件的相对次优性评估来捕捉这一结构特征。在数学推理基准和人类偏好数据集上的实验表明，RePO相较于现有方法取得了一致的性能提升，是一种有效且符合人类认知的大语言模型训练方法。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.09091v1" target="_blank" rel="noopener">Stabilizing On-Policy Distillation for MLLM Reasoning with Global Normalization</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Dongze Hao, Zhiwei Jin, Chen Chen 等</span>
+  </div>
+  <div class="keywords"><span class="kw">On-policy Distillation</span><span class="kw">RLVR</span><span class="kw">KL Divergence</span><span class="kw">MLLM</span><span class="kw">Post-training</span></div>
+  <div class="summary">本文提出了全局归一化蒸馏策略优化方法GNDPO，用于稳定多模态大语言模型推理中的在线策略蒸馏训练。该方法通过将原始KL散度分数转化为批次级别的相对优势，解决了朴素token级蒸馏中因异常状态幅度不对齐导致的梯度不稳定问题。与基于可验证奖励的强化学习相比，GNDPO利用更强教师模型提供密集细粒度监督，兼具训练稳定性和token级指导优势。实验结果表明，GNDPO在多模态推理任务上显著提升了训练鲁棒性和下游性能。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.09078v1" target="_blank" rel="noopener">The Hidden Bias of Process Reward Models:PRISM for Rewarding the Right Reasoning</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Aakriti Agrawal, Souradip Chakraborty, Armin Saghafian 等</span>
+  </div>
+  <div class="keywords"><span class="kw">Process Reward Model</span><span class="kw">PRM</span><span class="kw">RLHF</span><span class="kw">contrastive learning</span><span class="kw">Best-of-N</span></div>
+  <div class="summary">本文识别了过程奖励模型（PRM）中由步骤级训练数据严重不平衡导致的隐藏偏差，标准交叉熵训练会放大该偏差，造成高假阳性率并对Best-of-N选择、引导解码和策略优化产生不对称的负面影响。为此，作者提出PRISM框架，通过对比步骤级比较和基于时间前瞻策略生成的硬负样本进行策略感知训练，无需新的人工标注。PRISM还引入难度感知课程学习来优化对比步骤间隔，在PRMBench和ProcessBench上显著降低假阳性率（降低22%），并在引导解码（提升22%）和Best-of-N选择（提升33%）等下游任务中取得一致性能提升。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.09052v1" target="_blank" rel="noopener">INFUSER: Influence-Guided Self-Evolution Improves Reasoning</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Siyu Chen, Miao Lu, Beining Wu 等</span>
+  </div>
+  <div class="keywords"><span class="kw">self-evolution</span><span class="kw">GRPO</span><span class="kw">RLVR</span><span class="kw">influence score</span><span class="kw">reasoning</span></div>
+  <div class="summary">INFUSER是一个迭代协同训练框架，通过生成器和求解器两个角色的协同进化来提升语言模型的推理能力。生成器从非结构化文档池中生成问题和参考答案，求解器基于正确性奖励进行训练；生成器则通过优化器感知的影响力分数进行奖励，衡量所提问题是否真正有助于求解器在目标分布上的提升。为解决连续噪声影响分数与标准GRPO不兼容的问题，论文提出了双归一化变体DuGRPO用于生成器训练。实验表明，在Qwen3-8B-Base上，INFUSER在奥林匹克和SuperGPQA基准上相比强基线取得超过20%的相对提升，8B协同进化生成器甚至超越了冻结的32B思考生成器。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08974v1" target="_blank" rel="noopener">Diverse Thinking Schemata Elicit Better Reasoning in Large Language Models</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Xinyue Liang, Yizhe Yang, Yu Bai 等</span>
+  </div>
+  <div class="keywords"><span class="kw">GRPO</span><span class="kw">Reinforcement Learning</span><span class="kw">reasoning diversity</span><span class="kw">LRM</span><span class="kw">thinking schemata</span></div>
+  <div class="summary">本文针对大型推理模型的推理过程，提出了「思维模式」的概念，涵盖推理步骤间的转换方式与多样化解题路径两个维度。研究发现思维模式的多样性与模型性能存在正相关关系，并据此提出了多样化模式策略优化框架DiScO，通过强化学习鼓励模型产生更多样化的推理模式，同时在推理阶段进一步促进多样性。实验表明DiScO在多个数学推理基准上持续优于标准的组相对策略优化方法，并显著提升了模型从错误初始尝试中恢复的能力。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10931v1" target="_blank" rel="noopener">It Takes One to Bias Them All: Breaking Bad with One-Shot GRPO</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Naihao Deng, Yilun Zhu, Naichen Shi 等</span>
+  </div>
+  <div class="keywords"><span class="kw">GRPO</span><span class="kw">alignment</span><span class="kw">post-training</span><span class="kw">bias</span><span class="kw">safety</span></div>
+  <div class="summary">本文研究了大语言模型对齐机制的脆弱性，发现仅需一个有偏见的样本进行GRPO训练即可系统性地破坏模型对齐。研究表明，单次GRPO训练足以诱发模型产生刻板印象驱动的推理，且这种偏见能够跨属性、类别和基准泛化。不同模型对这种攻击的易感性取决于其初始产生偏见输出的可能性。该研究揭示了后训练对齐机制的关键漏洞：仅凭单个样本即可覆盖对齐效果，对LLM安全性具有重要警示意义。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10768v1" target="_blank" rel="noopener">N-GRPO: Embedding-Level Neighbor Mixing for Enhanced Policy Optimization</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Xukun Zhu, Hang Yu, Peng Di 等</span>
+  </div>
+  <div class="keywords"><span class="kw">GRPO</span><span class="kw">Semantic Neighbor Mixing</span><span class="kw">embedding-level exploration</span><span class="kw">RLHF</span><span class="kw">mathematical reasoning</span></div>
+  <div class="summary">本文提出N-GRPO，一种集成到GRPO框架中的新型探索策略，旨在解决大语言模型数学推理训练中rollout阶段的多样性与语义一致性之间的矛盾。核心贡献是语义邻居混合机制（Semantic Neighbor Mixing），通过将锚点词元与其最近语义邻居的嵌入进行动态混合，在严格遵循局部语义流形的前提下注入多样性。相比于token级采样产生重复轨迹或随机噪声破坏语义一致性的问题，该方法能生成更丰富且语义连贯的解题路径。在DeepSeek-R1-Distill-Qwen系列模型上的实验表明，N-GRPO在数学推理基准上持续超越强基线，并在分布外任务上展现出良好的泛化能力。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10346v1" target="_blank" rel="noopener">Reasoning or Memorization? Direction-Aware Diversity Exploration in LLM Reinforcement Learning</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Jiangnan Xia, Yucheng Shi, Yu Yang 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLHF</span><span class="kw">GRPO</span><span class="kw">reasoning</span><span class="kw">exploration</span><span class="kw">reinforcement learning</span></div>
+  <div class="summary">本文提出DiRL框架，旨在解决大语言模型强化学习训练中探索方向的问题。核心思想是区分轨迹多样性来源于真正的推理过程还是记忆模式与捷径，从而避免探索偏向记忆而非推理能力提升。DiRL通过从模型表示中提取推理-记忆方向，构建方向加权梯度特征来刻画rollout更新，并对奖励进行塑形以放大推理对齐的探索、抑制记忆对齐的变化。该方法无缝集成于GRPO框架中，在数学和通用推理基准上显著超越现有探索方法。</div>
+</div>
+</div>
+<div class="section">
+  <div class="section-header agent">
+    <span class="section-icon">🤖</span>
+    <span class="section-title">LLM Agent 方向</span>
+    <span class="section-count">10 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.09730v1" target="_blank" rel="noopener">SearchSwarm: Towards Delegation Intelligence in Agentic LLMs for Long-Horizon Deep Research</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Pu Ning, Quan Chen, Kun Tao 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Task Delegation</span><span class="kw">Multi-Agent</span><span class="kw">SFT</span><span class="kw">Deep Research</span></div>
+  <div class="summary">本文针对大语言模型在长周期复杂任务中上下文窗口有限的问题，提出了一种面向深度研究的多智能体协作框架SearchSwarm。核心贡献在于提出『委托智能』概念，即主智能体将任务分解并委派给子智能体执行、返回摘要结果以节省上下文预算的能力。作者设计了一套引导框架来生成高质量的任务分解与委托轨迹数据，并将其用于监督微调以将委托智能内化到模型权重中。最终模型SearchSwarm-30B-A3B在BrowseComp和BrowseComp-ZH基准上分别取得68.1和73.3的成绩，在同等规模模型中达到最优水平。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08982v1" target="_blank" rel="noopener">Baichuan-M4: A Clinical-Grade Medical Agent System for Continuous Care</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Aiyuan Yang, Chengfeng Dou, Da Pan 等</span>
+  </div>
+  <div class="keywords"><span class="kw">Medical Agent</span><span class="kw">RLHF</span><span class="kw">SPAR++</span><span class="kw">Multi-Agent</span><span class="kw">Continuous Care</span></div>
+  <div class="summary">Baichuan-M4是百川智能推出的临床级医疗大模型，专为持续护理场景设计，而非单轮问答。系统围绕三大支柱构建：统一运行时Baichuan-Harness负责强化学习训练与真实部署的一致性、工具调用及多智能体协调；核心推理模型采用持续护理强化学习框架，融合跨度级奖励建模SPAR++、推理路径压缩、课程学习及稳定策略优化；临床工具层支持患者记忆管理、权威循证检索以及文档·X光·皮肤病等多模态医学感知。在跨维度医疗评测中，Baichuan-M4在医学知识、动态问诊、长上下文记忆、循证检索及多模态理解等方面均达到领先水平，幻觉率降至3.3%。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10917v1" target="_blank" rel="noopener">Role-Agent: Bootstrapping LLM Agents via Dual-Role Evolution</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Xucong Wang, Ziyu Ma, Shidong Yang 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">bootstrapping</span><span class="kw">process reward</span><span class="kw">dual-role evolution</span><span class="kw">training data distribution</span></div>
+  <div class="summary">本文提出Role-Agent框架，利用单一LLM同时扮演智能体和环境两种角色，实现自举式协同进化。框架包含两个核心组件：世界内智能体（WIA）通过预测未来状态并将预测与实际状态的对齐程度作为过程奖励，鼓励具有环境感知能力的推理；智能体内世界（AIW）则通过分析失败轨迹的失败模式并检索相似任务，重塑训练数据分布以实现针对性练习。多个基准测试结果表明，Role-Agent相比强基线平均提升超过4%的性能。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10875v1" target="_blank" rel="noopener">Pushing the Limits of LLM Tool Calling via Experiential Knowledge Integration and Activation</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yupu Hao, Zhuoran Jin, Huanxuan Liao 等</span>
+  </div>
+  <div class="keywords"><span class="kw">Tool Calling</span><span class="kw">LLM Agent</span><span class="kw">Reinforcement Learning</span><span class="kw">Experiential Knowledge</span><span class="kw">KATE</span></div>
+  <div class="summary">本文系统研究了知识如何影响大语言模型的工具调用性能，涵盖知识获取、激活和内化三个阶段。研究发现实例级经验知识能提供稳定增益，而通过并行采样扩展推理宽度比加深推理深度更有效地激活潜在知识。在训练阶段，结合强化学习的知识增强后训练优于监督微调。基于上述洞察，作者提出了KATE框架，整合经验知识、推理宽度扩展推断与知识感知训练。在BFCL-V3和AppWorld基准上的实验验证了该框架相对强基线的显著提升。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10749v1" target="_blank" rel="noopener">Toward Secure LLM Agents: Threat Surfaces, Attacks, Defenses, and Evaluation</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yuchen Ling, Shengcheng Yu, Zhenyu Chen 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent Security</span><span class="kw">Prompt Injection</span><span class="kw">Tool-mediated Attack</span><span class="kw">Multi-agent Systems</span><span class="kw">Trust Boundary</span></div>
+  <div class="summary">本文对LLM智能体安全领域的247篇论文进行系统性综述，构建了基于生命周期的系统导向框架，围绕信息流、委托权限和持久状态三者交互来建模智能体安全风险。研究发现提示注入和工具介导的控制流劫持仍是主要威胁，而持久状态污染和多智能体传播正成为新兴核心问题。文章指出当前防御机制在组合性上仍较弱，现有基准测试对长周期、有状态及部署敏感风险的覆盖不足。作者主张安全的LLM智能体需要明确的信任边界、原则性的权限控制、具有溯源感知的状态管理以及符合真实部署场景的评估实践。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10709v1" target="_blank" rel="noopener">Effective Reinforcement Learning for Agentic Search by Recycling Zero-Variance Queries During Training</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;João Coelho, João Magalhães, Bruno Martins 等</span>
+  </div>
+  <div class="keywords"><span class="kw">GRPO</span><span class="kw">query recycling</span><span class="kw">LLM agent</span><span class="kw">reinforcement learning</span><span class="kw">multi-hop QA</span></div>
+  <div class="summary">本文针对基于GRPO类算法训练LLM搜索智能体时存在的零方差查询浪费问题，提出了查询回收（query recycling）技术。核心思路是将零方差的查询组（全对或全错）放入可变池中等待未来重采样，使有效训练分布随策略演化而动态调整。实验表明，1.7B参数模型在七个多跳问答基准上平均Pass@1达到66.0，媲美甚至超越7B参数的有监督模型。分析显示，训练后期约四分之三的有效批次来自回收查询，体现了策略改进恢复与策略漂移的双重贡献。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10507v1" target="_blank" rel="noopener">HIPIF: Hierarchical Planning and Information Folding for Long-Horizon LLM Agent Learning</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Juncheng Diao, Zhicong Lu, Peiguang Li 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Hierarchical Planning</span><span class="kw">Long-Horizon Tasks</span><span class="kw">Process Reward</span><span class="kw">Context Management</span></div>
+  <div class="summary">本文针对大语言模型在多轮长时序任务中性能下降的问题，提出了层次化规划与信息折叠框架HIPIF。该方法通过显式子目标分解组织长时序执行，并对已完成子目标的历史信息进行折叠压缩，以减少长上下文干扰。HIPIF还结合层次化反思机制与面向子目标的过程奖励，稳定子目标规划与执行，无需依赖昂贵的辅助模型或专家轨迹。在三个公开Agent基准上的大量实验验证了该方法的有效性。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10423v1" target="_blank" rel="noopener">WebChallenger: A Reliable and Efficient Generalist Web Agent</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Jayoo Hwang, Xiaowen Zhang, Vedant Padwal</span>
+  </div>
+  <div class="keywords"><span class="kw">Web Agent</span><span class="kw">PageMem</span><span class="kw">DOM</span><span class="kw">autonomous web navigation</span><span class="kw">compound action workflow</span></div>
+  <div class="summary">本文提出WebChallenger，一个面向自主网页导航的通用Web智能体框架，核心设计围绕PageMem展开——一种从DOM确定性构建的结构化页面表示，将页面组织为带摘要的语义层级结构。框架通过三种机制弥补LLM智能体与人类认知的差距：分治式观察流水线、轻量级网站探索与记忆系统、以及将常见多步操作折叠为单步动作的复合工作流。使用无需微调的开源模型，系统在WebArena、VisualWebArena、Online-Mind2Web和WorkArena四个基准上分别达到56.3%、48.7%、51.0%和70.9%，以极低成本接近前沿专有系统性能。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10064v1" target="_blank" rel="noopener">Bittensor Agent Arenas as a Trajectory Primitive: Distilling a Shopping Agent from ShoppingBench Subnet Traces</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Shardul Bansal, Seth Schilbe, Jarrod Barnes</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">post-training</span><span class="kw">GRPO</span><span class="kw">trajectory data</span><span class="kw">ShoppingBench</span></div>
+  <div class="summary">本文针对小模型智能体后训练中轨迹数据质量瓶颈问题，提出利用激励对齐的智能体竞技场（Bittensor SN15子网）自动生成高质量多轮交互轨迹。通过设计结构质量过滤器区分真正的智能体轨迹与子任务轨迹，并结合SFT与Dr. GRPO训练流程对Qwen3-4B进行后训练。实验结果显示模型在购物基准测试上ASR从18.0%提升至42.7%，接近合成数据基线水平，同时仅使用极少量子网输出数据。研究还发现pass@8与pass@1之间存在较大差距，并指出子任务轨迹数据是进一步缩小这一差距的主要杠杆。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.09961v1" target="_blank" rel="noopener">3SPO: State-Score-Supervised Policy Optimization for LLM Agents</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yu Han, Kailing Li, Yang Jiao 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RL for LLM Agents</span><span class="kw">credit assignment</span><span class="kw">GRPO</span><span class="kw">policy optimization</span><span class="kw">multi-turn agent</span></div>
+  <div class="summary">本文提出了一种名为3SPO（状态分数监督策略优化）的新型强化学习算法，专为LLM自主智能体的多轮任务训练设计。与现有基于完整轨迹的RL算法不同，3SPO在每个步骤后基于历史成功率计算状态分数，实现逐步信用分配、自适应回放和后步策略优化，无需价值函数估计或额外辅助模型。理论上，该方法在每状态赌博机抽象框架下证明了对数分配遗憾界，并提供了样本复杂度保证。实验表明，在ALFWorld和WebShop基准上，3SPO相比GRPO分别提升了22.6%和15.6个百分点，同时实现了2.4倍更多的状态探索和1.8倍更快的收敛速度。</div>
+</div>
+</div>
+</div>
+
+<footer>
+  <div>LLM 前沿技术周报 · 2026-W24 · 生成时间：2026-06-10 10:14 CST · 处理耗时：993s</div>
+  <div style="margin-top:5px;color:#475569;">由 Claude AI 辅助生成，内容来源：arXiv · 量子位 · 机器之心</div>
+</footer>
+
+</body>
+</html>

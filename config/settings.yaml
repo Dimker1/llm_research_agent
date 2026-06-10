@@ -1,0 +1,43 @@
+# 全局运行参数
+
+llm:
+  model: Claude-Sonnet-4.6
+  max_tokens: 512
+  # 相关性分数阈值：低于此值的条目不进入日报
+  min_relevance_score: 4
+  # 批量处理时的并发数（控制 API 速率）
+  batch_concurrency: 3
+  # 单条分析最大重试次数
+  max_retries: 2
+
+pipeline:
+  # arXiv 每条 abstract 截取长度（控制 token 消耗）
+  abstract_max_chars: 2000
+  # RSS summary 截取长度
+  summary_max_chars: 1000
+  # 关键词筛选后送 LLM 分析的最大候选数（防止调用量爆炸）
+  max_llm_candidates: 120
+  # 全局 Top-N：最终周报保留的总条目数（按相关度降序取最优）
+  target_total_items: 20
+  # 单方向最多展示条数（防止某一方向独占）
+  max_items_per_direction: 10
+
+storage:
+  db_path: data/digest.db
+
+output:
+  weekly_dir: weekly
+  filename_format: "%G-W%V.html"
+
+telegram:
+  # 单条消息最大字符数（Telegram 限制 4096）
+  max_message_length: 3800
+  # 多条消息之间的间隔秒数（避免频率限制）
+  send_interval_seconds: 1
+
+scheduler:
+  # 每周一 09:00 北京时间执行，汇总过去 7 天内容
+  day_of_week: mon
+  hour: 9
+  minute: 0
+  timezone: Asia/Shanghai

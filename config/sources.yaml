@@ -1,0 +1,84 @@
+arxiv:
+  enabled: true
+  phase: mvp
+  categories:
+    - cs.CL   # Computation and Language
+    - cs.AI   # Artificial Intelligence
+    - cs.LG   # Machine Learning
+  max_results: 500
+  lookback_hours: 192   # 周报回溯 8 天（7天+1天缓冲）
+
+rss:
+  # ── 中文来源 ──
+  - name: 量子位
+    url: https://www.qbitai.com/feed
+    lang: zh
+    enabled: true
+    phase: mvp
+    note: "官方 RSS，稳定"
+
+  - name: 机器之心
+    url: https://www.jiqizhixin.com/rss
+    lang: zh
+    enabled: false
+    phase: mvp
+    note: "官方 RSS 已失效（返回HTML），需自建 RSSHub 后改 url 并启用"
+
+  # ── 英文 Substack 博客（高质量，稳定）──
+  - name: AheadOfAI
+    url: https://magazine.sebastianraschka.com/feed
+    lang: en
+    enabled: true
+    phase: v2
+    note: "Sebastian Raschka 的 LLM 深度分析周报"
+
+  - name: ImportAI
+    url: https://importai.substack.com/feed
+    lang: en
+    enabled: true
+    phase: v2
+    note: "Jack Clark 的 AI 前沿动态，OpenAI 联合创始人"
+
+  - name: Interconnects
+    url: https://www.interconnects.ai/feed
+    lang: en
+    enabled: true
+    phase: v2
+    note: "Nathan Lambert 的 RLHF/对齐方向深度博客"
+
+  - name: TheGradient
+    url: https://thegradient.pub/rss/
+    lang: en
+    enabled: true
+    phase: v2
+    note: "斯坦福 AI 研究博客，高质量综述"
+
+  - name: LastWeekInAI
+    url: https://lastweekin.ai/feed
+    lang: en
+    enabled: true
+    phase: v2
+    note: "每周 AI 新闻摘要"
+
+  # ── 英文社区（Reddit）──
+  - name: Reddit_ML
+    url: https://www.reddit.com/r/MachineLearning/.rss
+    lang: en
+    enabled: true
+    phase: v2
+    note: "r/MachineLearning，研究者社区，论文讨论"
+
+  - name: Reddit_LocalLLaMA
+    url: https://www.reddit.com/r/LocalLLaMA/.rss
+    lang: en
+    enabled: true
+    phase: v2
+    note: "r/LocalLLaMA，开源模型 / 推理 / 微调实践"
+
+  # ── GitHub Trending（需自建 RSSHub）──
+  - name: GitHub_Trending_AI
+    url: https://rsshub.app/github/trending/weekly/python/en
+    lang: en
+    enabled: false
+    phase: v3
+    note: "GitHub Python AI 项目周榜，需自建 RSSHub 实例才稳定"

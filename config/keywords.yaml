@@ -1,0 +1,226 @@
+directions:
+  pretraining:
+    en:
+      - pretraining
+      - pre-training
+      - scaling law
+      - scaling laws
+      - data curation
+      - tokenizer
+      - tokenization
+      - architecture
+      - mixture of experts
+      - MoE
+      - continual learning
+      - foundation model
+      - training recipe
+      - context length
+      - long context
+      - extended context
+      - flash attention
+      - positional encoding
+      - RoPE
+      - language model pretraining
+      - pretraining data
+      - data mixture
+      - chinchilla
+      - compute optimal
+      - emergent abilities
+      - in-context learning
+      - transformer architecture
+      - large language model
+      - language model training
+      - model architecture
+      - attention mechanism
+      - sparse model
+      - dense model
+      - model capacity
+      - data quality
+      - synthetic data
+      - training data
+      - knowledge distillation
+      - model compression
+      - quantization
+      - inference efficiency
+      - speculative decoding
+      - KV cache
+      - multimodal
+      - vision language
+      - cross-lingual
+    zh:
+      - 预训练
+      - 数据配比
+      - 扩展律
+      - 分词器
+      - 混合专家
+      - 上下文长度
+      - 长上下文
+      - 基础模型
+      - 训练配方
+      - 计算最优
+      - 涌现能力
+      - 上下文学习
+      - 大语言模型
+      - 语言模型
+      - 模型架构
+      - 注意力机制
+      - 知识蒸馏
+      - 模型压缩
+      - 量化
+      - 推理效率
+      - 多模态
+      - 视觉语言
+
+  post_training:
+    en:
+      - RLHF
+      - RLAIF
+      - DPO
+      - PPO
+      - reward model
+      - alignment
+      - instruction tuning
+      - instruction following
+      - SFT
+      - supervised fine-tuning
+      - preference learning
+      - preference optimization
+      - Constitutional AI
+      - safe RLHF
+      - rejection sampling
+      - KTO
+      - SimPO
+      - online DPO
+      - offline RL
+      - value alignment
+      - human feedback
+      - GRPO
+      - ORPO
+      - fine-tuning
+      - chat model
+      - helpfulness
+      - harmlessness
+      - reinforcement learning from
+      - reward hacking
+      - reward shaping
+      - safety training
+      - red teaming
+      - jailbreak
+      - robustness
+      - adversarial training
+      - model merging
+      - LoRA
+      - PEFT
+      - parameter efficient
+      - evaluation benchmark
+      - LLM evaluation
+      - benchmark
+      - capability evaluation
+      - hallucination
+      - factuality
+      - truthfulness
+    zh:
+      - 后训练
+      - 强化学习
+      - 奖励模型
+      - 对齐
+      - 偏好学习
+      - 指令微调
+      - 安全对齐
+      - 人类反馈
+      - 偏好优化
+      - 价值对齐
+      - 微调
+      - 安全性
+      - 幻觉
+      - 评测
+      - 基准测试
+      - 参数高效
+
+  agent:
+    en:
+      - agent
+      - agents
+      - tool use
+      - tool calling
+      - function calling
+      - planning
+      - ReAct
+      - chain of thought
+      - CoT
+      - multi-agent
+      - multi agent
+      - autonomous
+      - autonomy
+      - memory
+      - retrieval augmented
+      - RAG
+      - code execution
+      - browser use
+      - computer use
+      - web agent
+      - software agent
+      - reasoning
+      - agentic
+      - LLM agent
+      - language agent
+      - task decomposition
+      - self-reflection
+      - reflexion
+      - workflow
+      - orchestration
+      - tool-augmented
+      - tool augmented
+      - automated reasoning
+      - program synthesis
+      - code generation
+      - code agent
+      - software engineering agent
+      - test-time compute
+      - inference-time scaling
+      - search and reasoning
+      - tree of thought
+      - ToT
+      - process reward
+      - outcome reward
+      - math reasoning
+      - mathematical reasoning
+      - step-by-step
+      - scratchpad
+      - long chain of thought
+      - long CoT
+      - o1
+      - deep seek
+      - deepseek-r1
+    zh:
+      - 智能体
+      - 工具调用
+      - 规划
+      - 多智能体
+      - 记忆
+      - 检索增强
+      - 自主
+      - 推理
+      - 代码执行
+      - 浏览器使用
+      - 语言智能体
+      - 编排
+      - 工作流
+      - 代码生成
+      - 数学推理
+      - 逐步推理
+      - 测试时计算
+
+# 全局排除词（内容含这些词且不含方向词则排除）
+exclude:
+  en:
+    - medical imaging
+    - drug discovery
+    - protein folding
+    - robotics hardware
+    - speech synthesis
+    - text-to-speech
+    - autonomous driving
+    - remote sensing
+    - satellite imagery
+    - climate model
