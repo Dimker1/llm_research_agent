@@ -245,24 +245,76 @@ def write_weekly_html(
 
     logger.info(f"[html_writer] wrote {total_count} items → {filepath}")
 
-    # 更新根目录 index.html，始终指向最新周报
-    index_path = "index.html"
-    weekly_url = f"weekly/{week_label}.html"
+    _update_index(output_dir, week_label, date_range, total_count)
+
+    return filepath
+
+
+def _update_index(output_dir: str, latest_label: str, date_range: tuple, latest_count: int) -> None:
+    """扫描 weekly/ 目录下所有 HTML，生成归档首页 index.html"""
+    from pathlib import Path as P
+    import re
+
+    weekly_dir = P(output_dir)
+    pattern = re.compile(r"^(\d{4}-W\d{2})\.html$")
+    all_weeks = sorted(
+      [m.group(1) for f in weekly_dir.iterdir() if (m := pattern.match(f.name))],
+        reverse=True,
+    )
+
+    rows_html = ""
+    for i, label in enumerate(all_weeks):
+        is_latest = label == all_weeks[0]
+        badge = ' <span style="background:#6366f1;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-left:8px;">最新</span>' if is_latest else ""
+        rows_html += f"""
+    <a class="week-row" href="weekly/{label}.html">
+      <span class="week-label">{label}{badge}</span>
+      <span class="week-arrow">→</span>
+    </a>"""
+
     index_html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8"/>
-  <meta http-equiv="refresh" content="0; url={weekly_url}"/>
-  <title>LLM 前沿技术周报</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LLM 前沿技术周报 · 归档</title>
+  <style>
+    * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+           background: #0f172a; color: #e2e8f0; min-height: 100vh; }}
+    .hero {{ background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 45%, #042f2e 100%);
+             padding: 56px 24px 44px; text-align: center; border-bottom: 1px solid #334155; }}
+    .hero h1 {{ font-size: clamp(22px, 4vw, 36px); font-weight: 800; color: #f8fafc; margin-bottom: 10px; }}
+    .hero h1 span {{ color: #818cf8; }}
+    .hero p {{ color: #94a3b8; font-size: 14px; }}
+    .container {{ max-width: 680px; margin: 48px auto; padding: 0 20px 72px; }}
+    .section-title {{ font-size: 13px; font-weight: 600; color: #64748b;
+                      text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px; }}
+    .week-row {{ display: flex; align-items: center; justify-content: space-between;
+                 background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+                 padding: 18px 22px; margin-bottom: 10px; text-decoration: none;
+                 color: #e2e8f0; transition: border-color .2s, background .2s; }}
+    .week-row:hover {{ border-color: #6366f1; background: #1e1b4b; }}
+    .week-label {{ font-size: 16px; font-weight: 600; }}
+    .week-arrow {{ color: #475569; font-size: 18px; }}
+    footer {{ text-align: center; color: #475569; font-size: 12px; padding: 24px; }}
+  </style>
 </head>
 <body>
-  <p>正在跳转到最新周报… <a href="{weekly_url}">点击这里</a></p>
+<div class="hero">
+  <h1>📚 LLM 前沿技术<span>周报</span>归档</h1>
+  <p>聚焦预训练 · 后训练 · LLM Agent，每周自动更新</p>
+</div>
+<div class="container">
+  <div class="section-title">所有周报（共 {len(all_weeks)} 期）</div>
+  {rows_html}
+</div>
+<footer>由 Claude AI 辅助生成 · 数据来源：arXiv · 量子位 · HuggingFace 等</footer>
 </body>
 </html>"""
-    with open(index_path, "w", encoding="utf-8") as f:
-        f.write(index_html)
 
-    return filepath
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(index_html)
 
 
 def _stats_cards(groups: dict, total: int) -> str:
