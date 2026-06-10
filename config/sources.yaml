@@ -1,6 +1,5 @@
 arxiv:
   enabled: true
-  phase: mvp
   categories:
     - cs.CL   # Computation and Language
     - cs.AI   # Artificial Intelligence
@@ -51,7 +50,7 @@ rss:
     url: https://www.interconnects.ai/feed
     lang: en
     enabled: true
-    note: "Nathan Lambert 的 RLHF/对齐方向深度博客"
+    note: "Nathan Lambert 的对齐方向深度博客"
 
   - name: TheGradient
     url: https://thegradient.pub/rss/
@@ -95,6 +94,36 @@ rss:
     enabled: true
     note: "The ML Engineer，每周 ML 工程实践动态"
 
+  - name: LiLianWeng
+    url: https://lilianweng.github.io/index.xml
+    lang: en
+    enabled: true
+    note: "OpenAI 前研究员 Lilian Weng，LLM 深度长文综述"
+
+  - name: InFERENCe
+    url: https://www.inference.vc/rss/
+    lang: en
+    enabled: true
+    note: "Ferenc Huszar，推理/概率视角分析 LLM"
+
+  - name: OneUsefulThing
+    url: https://www.oneusefulthing.org/feed
+    lang: en
+    enabled: true
+    note: "Ethan Mollick，LLM 实际应用与教育研究，更新频繁"
+
+  - name: LangChainBlog
+    url: https://blog.langchain.dev/rss.xml
+    lang: en
+    enabled: true
+    note: "LangChain 官方博客，Agent 框架实践"
+
+  - name: EleutherAI
+    url: https://blog.eleuther.ai/index.xml
+    lang: en
+    enabled: true
+    note: "EleutherAI 研究博客，开源 LLM 训练与评估"
+
   # ── 英文：机构官方博客 ──
   - name: HuggingFaceBlog
     url: https://huggingface.co/blog/feed.xml
@@ -113,6 +142,18 @@ rss:
     lang: en
     enabled: true
     note: "Google DeepMind 官方博客"
+
+  - name: GoogleResearch
+    url: https://blog.research.google/feeds/posts/default
+    lang: en
+    enabled: true
+    note: "Google Research 官方博客，基础研究与系统"
+
+  - name: MicrosoftResearch
+    url: https://www.microsoft.com/en-us/research/feed/
+    lang: en
+    enabled: true
+    note: "Microsoft Research 官方博客"
 
   - name: AlignmentForum
     url: https://www.alignmentforum.org/feed.xml
@@ -133,6 +174,13 @@ rss:
     enabled: true
     note: "r/LocalLLaMA，开源模型 / 推理 / 微调实践"
 
+  # ── 科技媒体 ──
+  - name: TechCrunchAI
+    url: https://techcrunch.com/category/artificial-intelligence/feed/
+    lang: en
+    enabled: true
+    note: "TechCrunch AI 频道，业界动态 + 融资新闻"
+
   # ── 以下需要 RSSHub 或已失效 ──
   - name: GitHub_Trending_AI
     url: https://rsshub.app/github/trending/weekly/python/en
@@ -151,3 +199,9 @@ rss:
     lang: en
     enabled: false
     note: "内容偏泛化，LLM 研究占比低，按需启用"
+
+  - name: VentureBeatAI
+    url: https://venturebeat.com/category/ai/feed/
+    lang: en
+    enabled: false
+    note: "偏商业报道，技术深度不足，按需启用"

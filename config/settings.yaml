@@ -1,7 +1,7 @@
 # 全局运行参数
 
 llm:
-  model: deepseek-chat
+  model: Claude-Sonnet-4.6
   max_tokens: 512
   # 相关性分数阈值：低于此值的条目不进入日报
   min_relevance_score: 4

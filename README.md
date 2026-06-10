@@ -168,12 +168,20 @@ rss:
 | Simon Willison | 博客 | EN | 启用 |
 | AI Snake Oil | 分析 | EN | 启用 |
 | The ML Engineer | 周报 | EN | 启用 |
+| Lilian Weng Blog | 综述博客 | EN | 启用 |
+| inFERENCe (Ferenc Huszar) | 分析 | EN | 启用 |
+| One Useful Thing (Ethan Mollick) | 应用研究 | EN | 启用 |
+| LangChain Blog | Agent框架 | EN | 启用 |
+| EleutherAI Blog | 开源研究 | EN | 启用 |
 | Hugging Face Blog | 官方博客 | EN | 启用 |
 | OpenAI Blog | 官方博客 | EN | 启用 |
 | DeepMind Blog | 官方博客 | EN | 启用 |
+| Google Research Blog | 官方博客 | EN | 启用 |
+| Microsoft Research | 官方博客 | EN | 启用 |
 | Alignment Forum | 社区 | EN | 启用 |
 | r/MachineLearning | 社区 | EN | 启用 |
 | r/LocalLLaMA | 社区 | EN | 启用 |
+| TechCrunch AI | 媒体 | EN | 启用 |
 | 机器之心 | 资讯 | ZH | 禁用（RSS 不稳定）|
 | GitHub Trending (Python/AI) | 项目 | EN | 禁用（需自建 RSSHub）|
 | Towards AI / TDS | 博客 | EN | 禁用（噪音较多）|

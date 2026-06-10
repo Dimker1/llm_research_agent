@@ -164,7 +164,7 @@ footer {
   <div class="hero-badge">LLM 前沿技术周报</div>
   <h1>📚 <span>2026-W23</span> 周报</h1>
   <p class="hero-sub">覆盖时间：2026-06-01 → 2026-06-07</p>
-  <p class="hero-sub">来源：<strong>arxiv</strong>(500) &nbsp;|&nbsp; <strong>量子位</strong>(10) &nbsp;|&nbsp; <strong>雷峰网</strong>(20) &nbsp;|&nbsp; <strong>宝玉博客</strong>(30) &nbsp;|&nbsp; <strong>AheadOfAI</strong>(20) &nbsp;|&nbsp; <strong>ImportAI</strong>(20) &nbsp;|&nbsp; <strong>Interconnects</strong>(20) &nbsp;|&nbsp; <strong>TheGradient</strong>(15) &nbsp;|&nbsp; <strong>LastWeekInAI</strong>(20) &nbsp;|&nbsp; <strong>ChipHuyen</strong>(10) &nbsp;|&nbsp; <strong>EugeneYan</strong>(30) &nbsp;|&nbsp; <strong>SimonWillison</strong>(30) &nbsp;|&nbsp; <strong>AISnakeOil</strong>(20) &nbsp;|&nbsp; <strong>MLEngineer</strong>(20) &nbsp;|&nbsp; <strong>HuggingFaceBlog</strong>(30) &nbsp;|&nbsp; <strong>OpenAIBlog</strong>(30) &nbsp;|&nbsp; <strong>DeepMindBlog</strong>(30) &nbsp;|&nbsp; <strong>AlignmentForum</strong>(10) &nbsp;|&nbsp; <strong>Reddit_ML</strong>(25) &nbsp;|&nbsp; <strong>Reddit_LocalLLaMA</strong>(25)</p>
+  <p class="hero-sub">来源：<strong>arxiv</strong>(500) &nbsp;|&nbsp; <strong>量子位</strong>(10) &nbsp;|&nbsp; <strong>雷峰网</strong>(20) &nbsp;|&nbsp; <strong>宝玉博客</strong>(30) &nbsp;|&nbsp; <strong>AheadOfAI</strong>(20) &nbsp;|&nbsp; <strong>ImportAI</strong>(20) &nbsp;|&nbsp; <strong>Interconnects</strong>(20) &nbsp;|&nbsp; <strong>TheGradient</strong>(15) &nbsp;|&nbsp; <strong>LastWeekInAI</strong>(20) &nbsp;|&nbsp; <strong>ChipHuyen</strong>(10) &nbsp;|&nbsp; <strong>EugeneYan</strong>(30) &nbsp;|&nbsp; <strong>SimonWillison</strong>(30) &nbsp;|&nbsp; <strong>AISnakeOil</strong>(20) &nbsp;|&nbsp; <strong>MLEngineer</strong>(20) &nbsp;|&nbsp; <strong>LiLianWeng</strong>(30) &nbsp;|&nbsp; <strong>InFERENCe</strong>(15) &nbsp;|&nbsp; <strong>OneUsefulThing</strong>(20) &nbsp;|&nbsp; <strong>LangChainBlog</strong>(30) &nbsp;|&nbsp; <strong>EleutherAI</strong>(30) &nbsp;|&nbsp; <strong>HuggingFaceBlog</strong>(30) &nbsp;|&nbsp; <strong>OpenAIBlog</strong>(30) &nbsp;|&nbsp; <strong>DeepMindBlog</strong>(30) &nbsp;|&nbsp; <strong>GoogleResearch</strong>(25) &nbsp;|&nbsp; <strong>MicrosoftResearch</strong>(10) &nbsp;|&nbsp; <strong>AlignmentForum</strong>(10) &nbsp;|&nbsp; <strong>Reddit_ML</strong>(25) &nbsp;|&nbsp; <strong>Reddit_LocalLLaMA</strong>(25) &nbsp;|&nbsp; <strong>TechCrunchAI</strong>(20)</p>
   <div class="hero-meta">
     <span>📄 精选 31 条内容</span>
     <span>🏗️ 预训练 1 条</span>
@@ -455,6 +455,26 @@ footer {
   <div class="summary">该发布介绍了 Datasette Agent 的一个新功能：利用 MicroPython 在沙盒中安全执行 Python 代码。作者希望 Agent 能自主生成并运行代码，而不会带来安全风险。当前 Alpha 版本表现良好，GPT-5.5 引擎尚未能突破沙盒限制。该工作直接涉及 LLM Agent 的代码执行能力与安全性。</div>
 </div>
 <div class="item-card">
+  <div class="item-title"><a href="https://www.langchain.com/blog/interrupt-2026-overview" target="_blank" rel="noopener">Everything we shipped at Interrupt</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;LangChainBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-05</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">autonomous debugging</span><span class="kw">agent deployment</span><span class="kw">LangChain</span><span class="kw">production agents</span></div>
+  <div class="summary">LangChain在Interrupt 2026大会上发布了一系列面向生产环境的Agent构建工具和产品。主要包括自主调试能力、一键部署功能等，旨在帮助开发团队更高效地构建、测试和部署智能体应用。这些产品覆盖了Agent开发的完整生命周期，从开发到生产落地形成闭环。该系列发布体现了LangChain在Agent工程化和生产化方向上的持续深耕。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.langchain.com/blog/give-your-ai-agent-its-own-computer" target="_blank" rel="noopener">Give your agent its own computer</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;LangChainBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-05</span>
+    <span class="score-badge score-7">7/10</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Sandbox</span><span class="kw">代码执行</span><span class="kw">工具调用</span><span class="kw">Agent基础设施</span></div>
+  <div class="summary">本文探讨了为AI Agent提供独立计算环境的必要性与挑战。每个Agent执行任务时需要独立的文件系统、Shell、包管理器等完整计算资源，但直接开放基础设施存在安全风险。LangSmith Sandboxes作为解决方案被提出，旨在为Agent提供隔离、安全的沙箱计算环境。文章指出随着Agent大规模并发运行，基础设施范式正在发生根本性转变。</div>
+</div>
+<div class="item-card">
   <div class="item-title"><a href="http://arxiv.org/abs/2606.08790v1" target="_blank" rel="noopener">RAILS: Verification-Native Clearing For Agentic Commerce</a></div>
   <div class="item-meta">
     <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
@@ -485,6 +505,16 @@ footer {
   </div>
   <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Tool Use</span><span class="kw">Agentic Editing</span><span class="kw">Datasette</span><span class="kw">Plugin</span></div>
   <div class="summary">datasette-agent-edit 是一个为 Datasette Agent 设计的基础插件，版本0.1a0。该插件实现了一套文本编辑工具集，灵感来源于 Claude 文本编辑器的设计模式，包括 view（带行号查看文件片段）、str_replace（精确字符串替换）和 insert（指定行后插入文本）三个核心工具。其设计目标是作为通用基础层，供其他需要文本编辑能力的插件复用，覆盖 Markdown 协作编辑、大型 SQL 查询更新及 SVG 文件编辑等场景。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://openai.com/index/codex-for-knowledge-work" target="_blank" rel="noopener">Codex is becoming a productivity tool for everyone</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;OpenAIBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-01</span>
+    <span class="score-badge score-6">6/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Codex</span><span class="kw">代码生成</span><span class="kw">工作流自动化</span><span class="kw">LLM Agent</span><span class="kw">AI生产力工具</span></div>
+  <div class="summary">OpenAI发布《下一个知识工作时代》报告，探讨Codex如何通过AI能力重塑生产力工具。报告涵盖AI驱动的研究辅助、数据分析、工作流自动化以及内容创作等应用场景。Codex正从专业开发者工具向面向所有知识工作者的通用生产力平台演进。该报告揭示了LLM Agent在实际工作场景中的广泛应用潜力与落地方向。</div>
 </div>
 <div class="item-card">
   <div class="item-title"><a href="http://arxiv.org/abs/2606.08710v1" target="_blank" rel="noopener">Structuring agentic AI for HPC code modernization</a></div>
@@ -519,42 +549,11 @@ footer {
   <div class="keywords"><span class="kw">LLM</span><span class="kw">Reinforcement Learning</span><span class="kw">PPO</span><span class="kw">Reward Shaping</span><span class="kw">Financial Portfolio</span></div>
   <div class="summary">GIFT是一个利用大语言模型指导金融强化学习中状态-奖励接口设计的框架。该框架通过因子引导的状态增强、风险规则引导的奖励塑形以及诊断引导的细化三个模块，将金融知识注入PPO训练过程中。与直接用LLM做交易决策不同，GIFT仅在训练前利用LLM设计接口，评估阶段固定接口且不再调用LLM。在多种市场环境下的滚动窗口实验表明，GIFT显著提升了样本外风险调整后的投资组合表现。</div>
 </div>
-<div class="item-card">
-  <div class="item-title"><a href="https://openai.com/index/endava-frontiers" target="_blank" rel="noopener">How Endava is redesigning software delivery around AI agents</a></div>
-  <div class="item-meta">
-    <span class="meta-badge"><strong>来源</strong>&nbsp;OpenAIBlog</span>
-    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-04</span>
-    <span class="score-badge score-5">5/10</span>
-  </div>
-  <div class="keywords"><span class="kw">AI Agent</span><span class="kw">ChatGPT Enterprise</span><span class="kw">Codex</span><span class="kw">软件交付自动化</span><span class="kw">企业AI落地</span></div>
-  <div class="summary">Endava公司正在围绕AI智能体重新设计软件交付流程，利用ChatGPT Enterprise和Codex加速软件开发与交付。该公司通过引入AI智能体自动化工作流程，大幅提升了企业级软件开发效率。文章介绍了Endava如何在整个企业内构建以AI为核心的文化，推动数字化转型。这是一个典型的企业级AI落地应用案例，展示了大语言模型在实际工程场景中的部署与使用。</div>
-</div>
-<div class="item-card">
-  <div class="item-title"><a href="https://openai.com/index/chatgpt-memory-dreaming" target="_blank" rel="noopener">Dreaming: Better memory for a more helpful ChatGPT</a></div>
-  <div class="item-meta">
-    <span class="meta-badge"><strong>来源</strong>&nbsp;OpenAIBlog</span>
-    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-04</span>
-    <span class="score-badge score-5">5/10</span>
-  </div>
-  <div class="keywords"><span class="kw">memory system</span><span class="kw">persistent context</span><span class="kw">ChatGPT</span><span class="kw">personalization</span><span class="kw">long-term memory</span></div>
-  <div class="summary">ChatGPT推出了一种新的记忆系统，能够更好地记住用户的偏好与历史上下文。该系统旨在保持对话内容的连贯性与相关性，使跨会话的交互体验更加个性化。这一功能通过持久化记忆机制提升了ChatGPT作为助手的实用性。</div>
-</div>
-<div class="item-card">
-  <div class="item-title"><a href="http://arxiv.org/abs/2606.08729v1" target="_blank" rel="noopener">IR-SIM: A Lightweight Skill-Native Simulator for Navigation, Learning, and Benchmarking</a></div>
-  <div class="item-meta">
-    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
-    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
-    <span class="score-badge score-4">4/10</span>
-    <span class="meta-badge"><strong>作者</strong>&nbsp;Ruihua Han, Shuai Wang, Chengyang Li 等</span>
-  </div>
-  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Robot Simulation</span><span class="kw">Navigation</span><span class="kw">Benchmarking</span><span class="kw">YAML-based scenario generation</span></div>
-  <div class="summary">本文提出IR-SIM，一个轻量级的技能原生导航仿真器，旨在支持快速场景构建、基准测试和机器人学习。该仿真器通过YAML配置文件完整定义场景，涵盖移动机器人运动学、几何碰撞检测、激光雷达感知等模块。IR-SIM集成了LLM Agent技能，可通过自然语言提示自动生成和修改仿真场景，并支持自动化基准测试与训练数据生成。此外，系统提供与高保真仿真器及真实世界部署的桥接接口，降低了从原型到部署的门槛。实验验证了其在导航场景构建、碰撞避免策略训练和社会导航基准测试等多任务中的便捷性与通用性。</div>
-</div>
 </div>
 </div>
 
 <footer>
-  <div>LLM 前沿技术周报 · 2026-W23 · 生成时间：2026-06-10 16:57 CST · 处理耗时：573s</div>
+  <div>LLM 前沿技术周报 · 2026-W23 · 生成时间：2026-06-10 18:18 CST · 处理耗时：1726s</div>
   <div style="margin-top:5px;color:#475569;">由 Claude AI 辅助生成，内容来源：arXiv · 量子位 · 机器之心</div>
 </footer>
 

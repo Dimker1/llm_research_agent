@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LLM 周报 | 2026-W18</title>
+  <style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface2: #273349;
+  --border: #334155;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-bright: #f8fafc;
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --code-bg: #0d1117;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+a { color: var(--primary-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 45%, #042f2e 100%);
+  padding: 56px 24px 44px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99,102,241,.18), transparent);
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(99,102,241,.2);
+  border: 1px solid var(--primary);
+  color: var(--primary-light);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 14px; border-radius: 999px;
+  margin-bottom: 18px;
+  position: relative;
+}
+.hero h1 {
+  font-size: clamp(22px, 4vw, 38px);
+  font-weight: 800; color: var(--text-bright);
+  line-height: 1.2; margin-bottom: 10px;
+  position: relative;
+}
+.hero h1 span { color: var(--primary-light); }
+.hero-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; position: relative; }
+.hero-meta {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;
+  font-size: 13px; color: var(--text-muted); position: relative;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+/* LAYOUT */
+.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+.content { padding: 44px 0 72px; }
+
+/* STATS */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px; margin-bottom: 40px;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; text-align: center;
+}
+.stat-value { font-size: 30px; font-weight: 800; color: var(--primary-light); line-height: 1; margin-bottom: 6px; }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .07em; }
+
+/* SECTION */
+.section { margin-bottom: 48px; }
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 2px solid;
+}
+.section-header.pretraining { border-color: #6366f1; }
+.section-header.post_training { border-color: #10b981; }
+.section-header.agent { border-color: #f59e0b; }
+.section-icon { font-size: 22px; }
+.section-title { font-size: 18px; font-weight: 700; color: var(--text-bright); }
+.section-count {
+  margin-left: auto; font-size: 12px; font-weight: 600;
+  padding: 2px 10px; border-radius: 999px;
+  background: rgba(99,102,241,.15); color: var(--primary-light);
+}
+.section-header.post_training .section-count { background: rgba(16,185,129,.15); color: #6ee7b7; }
+.section-header.agent .section-count { background: rgba(245,158,11,.15); color: #fcd34d; }
+
+/* ITEM CARD */
+.item-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; margin-bottom: 14px;
+  transition: border-color .2s;
+}
+.item-card:hover { border-color: var(--primary); }
+.item-title {
+  font-size: 15px; font-weight: 700; color: var(--text-bright);
+  margin-bottom: 10px; line-height: 1.4;
+}
+.item-title a { color: var(--text-bright); }
+.item-title a:hover { color: var(--primary-light); text-decoration: none; }
+.item-meta {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  margin-bottom: 12px; font-size: 12px; color: var(--text-muted);
+}
+.meta-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(148,163,184,.1); border-radius: 6px;
+  padding: 3px 8px; white-space: nowrap;
+}
+.meta-badge strong { color: var(--text-bright); }
+.score-badge {
+  background: rgba(99,102,241,.2); color: #a5b4fc;
+  border-radius: 6px; padding: 3px 8px; font-weight: 700;
+}
+.score-9, .score-10 { background: rgba(16,185,129,.2); color: #6ee7b7; }
+.score-7, .score-8 { background: rgba(99,102,241,.2); color: #a5b4fc; }
+.score-5, .score-6 { background: rgba(245,158,11,.15); color: #fcd34d; }
+.keywords { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.kw {
+  font-size: 11px; font-family: 'SF Mono', Consolas, monospace;
+  background: rgba(99,102,241,.15); color: #c4b5fd;
+  border-radius: 4px; padding: 2px 7px;
+}
+.summary {
+  font-size: 13px; color: var(--text-muted); line-height: 1.7;
+  border-left: 3px solid var(--border);
+  padding-left: 12px; margin-top: 8px;
+}
+.empty-section {
+  color: var(--text-muted); font-size: 14px; font-style: italic;
+  padding: 16px 0;
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border); padding: 22px;
+  text-align: center; font-size: 12px; color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">LLM 前沿技术周报</div>
+  <h1>📚 <span>2026-W18</span> 周报</h1>
+  <p class="hero-sub">覆盖时间：2026-04-27 → 2026-05-03</p>
+  <p class="hero-sub">来源：<strong>arxiv</strong>(500) &nbsp;|&nbsp; <strong>量子位</strong>(10) &nbsp;|&nbsp; <strong>雷峰网</strong>(20) &nbsp;|&nbsp; <strong>宝玉博客</strong>(30) &nbsp;|&nbsp; <strong>AheadOfAI</strong>(20) &nbsp;|&nbsp; <strong>ImportAI</strong>(20) &nbsp;|&nbsp; <strong>Interconnects</strong>(20) &nbsp;|&nbsp; <strong>TheGradient</strong>(15) &nbsp;|&nbsp; <strong>LastWeekInAI</strong>(20) &nbsp;|&nbsp; <strong>ChipHuyen</strong>(10) &nbsp;|&nbsp; <strong>EugeneYan</strong>(30) &nbsp;|&nbsp; <strong>SimonWillison</strong>(30) &nbsp;|&nbsp; <strong>AISnakeOil</strong>(20) &nbsp;|&nbsp; <strong>MLEngineer</strong>(20) &nbsp;|&nbsp; <strong>LiLianWeng</strong>(30) &nbsp;|&nbsp; <strong>InFERENCe</strong>(15) &nbsp;|&nbsp; <strong>OneUsefulThing</strong>(20) &nbsp;|&nbsp; <strong>LangChainBlog</strong>(30) &nbsp;|&nbsp; <strong>EleutherAI</strong>(30) &nbsp;|&nbsp; <strong>HuggingFaceBlog</strong>(30) &nbsp;|&nbsp; <strong>OpenAIBlog</strong>(30) &nbsp;|&nbsp; <strong>DeepMindBlog</strong>(30) &nbsp;|&nbsp; <strong>GoogleResearch</strong>(25) &nbsp;|&nbsp; <strong>MicrosoftResearch</strong>(10) &nbsp;|&nbsp; <strong>AlignmentForum</strong>(10) &nbsp;|&nbsp; <strong>Reddit_ML</strong>(25) &nbsp;|&nbsp; <strong>Reddit_LocalLLaMA</strong>(25) &nbsp;|&nbsp; <strong>TechCrunchAI</strong>(20)</p>
+  <div class="hero-meta">
+    <span>📄 精选 6 条内容</span>
+    <span>🏗️ 预训练 0 条</span>
+    <span>🎯 后训练 0 条</span>
+    <span>🤖 Agent 6 条</span>
+  </div>
+</div>
+
+<div class="container content">
+  
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-value">6</div>
+    <div class="stat-label">精选总条目</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#818cf8">0</div>
+    <div class="stat-label">🏗️ 预训练</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#6ee7b7">0</div>
+    <div class="stat-label">🎯 后训练</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#fcd34d">6</div>
+    <div class="stat-label">🤖 LLM Agent</div>
+  </div>
+</div>
+  
+<div class="section">
+  <div class="section-header pretraining">
+    <span class="section-icon">🏗️</span>
+    <span class="section-title">预训练方向</span>
+    <span class="section-count">0 条</span>
+  </div>
+  <p class="empty-section">本周暂无相关内容</p>
+</div>
+<div class="section">
+  <div class="section-header post_training">
+    <span class="section-icon">🎯</span>
+    <span class="section-title">后训练方向</span>
+    <span class="section-count">0 条</span>
+  </div>
+  <p class="empty-section">本周暂无相关内容</p>
+</div>
+<div class="section">
+  <div class="section-header agent">
+    <span class="section-icon">🤖</span>
+    <span class="section-title">LLM Agent 方向</span>
+    <span class="section-count">6 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="https://baoyu.io/blog/2026-04-29/manthanguptaa-2034849672985288957" target="_blank" rel="noopener">深度拆解 Hermes Agent 的记忆系统：它如何修正 OpenClaw 的误区</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;宝玉博客</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-04-28</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Hermes Agent</span><span class="kw">记忆系统</span><span class="kw">Agent</span><span class="kw">OpenClaw</span></div>
+  <div class="summary">本文深度拆解了 Hermes Agent 的记忆系统，分析了记忆机制如何修正 OpenClaw 在记忆管理上的常见误区。内容聚焦于 Agent 如何通过结构化记忆存取外部信息以实现长期上下文保持，而非涉及 LLM 预训练或后训练方法。文章通过对比其他记忆系统，揭示了高效记忆策略对 Agent 性能的关键影响。核心在于为构建更可靠的自主 Agent 提供记忆层面的设计启示。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://machinelearning.substack.com/p/issue-385-the-ml-engineer" target="_blank" rel="noopener">Issue #385 - The ML Engineer 🤖</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;MLEngineer</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-03</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Agent</span><span class="kw">AGI</span><span class="kw">MCP</span><span class="kw">MLFlow</span><span class="kw">PyTorch Lightning</span></div>
+  <div class="summary">本期ML Engineer周报聚焦智能体与AGI前沿话题，收录了Demis Hassabis关于智能体与通用人工智能的见解、Google Cloud的MCP生态系统更新、Netflix的机器学习服务现状报告、PyTorch Lightning供应链攻击警告，以及MLFlow中多模态追踪功能等多项内容。其中智能体相关讨论和MCP生态对LLM Agent方向具有直接参考价值。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://huggingface.co/blog/nvidia/nemotron-3-nano-omni-multimodal-intelligence" target="_blank" rel="noopener">Introducing NVIDIA Nemotron 3 Nano Omni: Long-Context Multimodal Intelligence for Documents, Audio and Video Agents</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;HuggingFaceBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-04-28</span>
+    <span class="score-badge score-6">6/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Multimodal LLM</span><span class="kw">Long-Context</span><span class="kw">Agent</span><span class="kw">Nemotron</span><span class="kw">NVIDIA</span></div>
+  <div class="summary">NVIDIA发布了Nemotron 3 Nano Omni模型，这是一款专注于长上下文多模态智能的模型，支持文档、音频和视频的理解与处理。该模型面向Agent应用场景设计，能够处理复杂的多模态输入任务。其核心特点是长上下文能力与多模态融合，适合构建文档分析、音视频理解等智能代理系统。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://baoyu.io/blog/demis-hassabis-agents-agi-and-the-next-big-scientific-breakthrough" target="_blank" rel="noopener">Demis Hassabis：AGI 还缺什么，智能体到底行不行，下一个科学突破长什么样</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;宝玉博客</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-04-29</span>
+    <span class="score-badge score-6">6/10</span>
+  </div>
+  <div class="keywords"><span class="kw">AGI</span><span class="kw">LLM Agent</span><span class="kw">AI for Science</span><span class="kw">长程推理</span><span class="kw">智能体规划</span></div>
+  <div class="summary">本文围绕DeepMind创始人Demis Hassabis对AGI现状与未来的判断展开，以50/50的概率框架拆解了AGI何时到来的不确定性。Hassabis重点评估了当前AI智能体的真实能力边界与局限，指出智能体在复杂任务规划与长程推理上仍存在显著差距。文章还探讨了AI for Science方向的进展，分析了下一个重大科学突破可能由AI催生的路径与条件。整体内容呈现了业界顶级研究者对LLM与智能体技术发展阶段的冷静审视。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://baoyu.io/blog/andrej-karpathy-from-vibe-coding-to-agentic-engineering" target="_blank" rel="noopener">Karpathy 最新访谈：Vibe Coding 只是开始，真正重要的是 Agentic Engineering</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;宝玉博客</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-04-28</span>
+    <span class="score-badge score-6">6/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Agentic Engineering</span><span class="kw">Vibe Coding</span><span class="kw">LLM Agent</span><span class="kw">AI编程</span><span class="kw">软件质量</span></div>
+  <div class="summary">Karpathy在最新访谈中提出，AI编程的发展方向不仅仅是Vibe Coding这种快速生成代码的方式，而是向Agentic Engineering演进。Agentic Engineering强调利用AI Agent在软件开发全流程中保障代码质量与系统可靠性。这一理念将LLM Agent从辅助编写工具提升为工程质量的守护者。Karpathy认为真正的挑战在于如何让AI以更自主、更负责任的方式参与复杂软件工程实践。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://eugeneyan.com//writing/working-with-ai/" target="_blank" rel="noopener">How to Work and Compound with AI</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;EugeneYan</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-02</span>
+    <span class="score-badge score-5">5/10</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Human-AI Collaboration</span><span class="kw">Context Engineering</span><span class="kw">Autonomous Agent</span><span class="kw">Delegation</span></div>
+  <div class="summary">本文探讨如何与AI协作并实现复利式效率提升，提出将上下文作为基础设施、以品味作为配置参数、通过验证机制保障自主性等核心理念。文章强调通过委托授权实现规模化扩展，并通过闭环反馈持续优化人机协作流程。整体框架偏向实践指导，帮助从业者最大化LLM辅助工作的效能。</div>
+</div>
+</div>
+</div>
+
+<footer>
+  <div>LLM 前沿技术周报 · 2026-W18 · 生成时间：2026-06-10 18:10 CST · 处理耗时：1632s</div>
+  <div style="margin-top:5px;color:#475569;">由 Claude AI 辅助生成，内容来源：arXiv · 量子位 · 机器之心</div>
+</footer>
+
+</body>
+</html>

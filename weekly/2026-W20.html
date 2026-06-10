@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LLM 周报 | 2026-W20</title>
+  <style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface2: #273349;
+  --border: #334155;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-bright: #f8fafc;
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --code-bg: #0d1117;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+a { color: var(--primary-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 45%, #042f2e 100%);
+  padding: 56px 24px 44px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99,102,241,.18), transparent);
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(99,102,241,.2);
+  border: 1px solid var(--primary);
+  color: var(--primary-light);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 14px; border-radius: 999px;
+  margin-bottom: 18px;
+  position: relative;
+}
+.hero h1 {
+  font-size: clamp(22px, 4vw, 38px);
+  font-weight: 800; color: var(--text-bright);
+  line-height: 1.2; margin-bottom: 10px;
+  position: relative;
+}
+.hero h1 span { color: var(--primary-light); }
+.hero-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; position: relative; }
+.hero-meta {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;
+  font-size: 13px; color: var(--text-muted); position: relative;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+/* LAYOUT */
+.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+.content { padding: 44px 0 72px; }
+
+/* STATS */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px; margin-bottom: 40px;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; text-align: center;
+}
+.stat-value { font-size: 30px; font-weight: 800; color: var(--primary-light); line-height: 1; margin-bottom: 6px; }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .07em; }
+
+/* SECTION */
+.section { margin-bottom: 48px; }
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 2px solid;
+}
+.section-header.pretraining { border-color: #6366f1; }
+.section-header.post_training { border-color: #10b981; }
+.section-header.agent { border-color: #f59e0b; }
+.section-icon { font-size: 22px; }
+.section-title { font-size: 18px; font-weight: 700; color: var(--text-bright); }
+.section-count {
+  margin-left: auto; font-size: 12px; font-weight: 600;
+  padding: 2px 10px; border-radius: 999px;
+  background: rgba(99,102,241,.15); color: var(--primary-light);
+}
+.section-header.post_training .section-count { background: rgba(16,185,129,.15); color: #6ee7b7; }
+.section-header.agent .section-count { background: rgba(245,158,11,.15); color: #fcd34d; }
+
+/* ITEM CARD */
+.item-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; margin-bottom: 14px;
+  transition: border-color .2s;
+}
+.item-card:hover { border-color: var(--primary); }
+.item-title {
+  font-size: 15px; font-weight: 700; color: var(--text-bright);
+  margin-bottom: 10px; line-height: 1.4;
+}
+.item-title a { color: var(--text-bright); }
+.item-title a:hover { color: var(--primary-light); text-decoration: none; }
+.item-meta {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  margin-bottom: 12px; font-size: 12px; color: var(--text-muted);
+}
+.meta-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(148,163,184,.1); border-radius: 6px;
+  padding: 3px 8px; white-space: nowrap;
+}
+.meta-badge strong { color: var(--text-bright); }
+.score-badge {
+  background: rgba(99,102,241,.2); color: #a5b4fc;
+  border-radius: 6px; padding: 3px 8px; font-weight: 700;
+}
+.score-9, .score-10 { background: rgba(16,185,129,.2); color: #6ee7b7; }
+.score-7, .score-8 { background: rgba(99,102,241,.2); color: #a5b4fc; }
+.score-5, .score-6 { background: rgba(245,158,11,.15); color: #fcd34d; }
+.keywords { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.kw {
+  font-size: 11px; font-family: 'SF Mono', Consolas, monospace;
+  background: rgba(99,102,241,.15); color: #c4b5fd;
+  border-radius: 4px; padding: 2px 7px;
+}
+.summary {
+  font-size: 13px; color: var(--text-muted); line-height: 1.7;
+  border-left: 3px solid var(--border);
+  padding-left: 12px; margin-top: 8px;
+}
+.empty-section {
+  color: var(--text-muted); font-size: 14px; font-style: italic;
+  padding: 16px 0;
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border); padding: 22px;
+  text-align: center; font-size: 12px; color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">LLM 前沿技术周报</div>
+  <h1>📚 <span>2026-W20</span> 周报</h1>
+  <p class="hero-sub">覆盖时间：2026-05-11 → 2026-05-17</p>
+  <p class="hero-sub">来源：<strong>arxiv</strong>(500) &nbsp;|&nbsp; <strong>量子位</strong>(10) &nbsp;|&nbsp; <strong>雷峰网</strong>(20) &nbsp;|&nbsp; <strong>宝玉博客</strong>(30) &nbsp;|&nbsp; <strong>AheadOfAI</strong>(20) &nbsp;|&nbsp; <strong>ImportAI</strong>(20) &nbsp;|&nbsp; <strong>Interconnects</strong>(20) &nbsp;|&nbsp; <strong>TheGradient</strong>(15) &nbsp;|&nbsp; <strong>LastWeekInAI</strong>(20) &nbsp;|&nbsp; <strong>ChipHuyen</strong>(10) &nbsp;|&nbsp; <strong>EugeneYan</strong>(30) &nbsp;|&nbsp; <strong>SimonWillison</strong>(30) &nbsp;|&nbsp; <strong>AISnakeOil</strong>(20) &nbsp;|&nbsp; <strong>MLEngineer</strong>(20) &nbsp;|&nbsp; <strong>LiLianWeng</strong>(30) &nbsp;|&nbsp; <strong>InFERENCe</strong>(15) &nbsp;|&nbsp; <strong>OneUsefulThing</strong>(20) &nbsp;|&nbsp; <strong>LangChainBlog</strong>(30) &nbsp;|&nbsp; <strong>EleutherAI</strong>(30) &nbsp;|&nbsp; <strong>HuggingFaceBlog</strong>(30) &nbsp;|&nbsp; <strong>OpenAIBlog</strong>(30) &nbsp;|&nbsp; <strong>DeepMindBlog</strong>(30) &nbsp;|&nbsp; <strong>GoogleResearch</strong>(25) &nbsp;|&nbsp; <strong>MicrosoftResearch</strong>(10) &nbsp;|&nbsp; <strong>AlignmentForum</strong>(10) &nbsp;|&nbsp; <strong>Reddit_ML</strong>(25) &nbsp;|&nbsp; <strong>Reddit_LocalLLaMA</strong>(25) &nbsp;|&nbsp; <strong>TechCrunchAI</strong>(20)</p>
+  <div class="hero-meta">
+    <span>📄 精选 9 条内容</span>
+    <span>🏗️ 预训练 4 条</span>
+    <span>🎯 后训练 0 条</span>
+    <span>🤖 Agent 5 条</span>
+  </div>
+</div>
+
+<div class="container content">
+  
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-value">9</div>
+    <div class="stat-label">精选总条目</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#818cf8">4</div>
+    <div class="stat-label">🏗️ 预训练</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#6ee7b7">0</div>
+    <div class="stat-label">🎯 后训练</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#fcd34d">5</div>
+    <div class="stat-label">🤖 LLM Agent</div>
+  </div>
+</div>
+  
+<div class="section">
+  <div class="section-header pretraining">
+    <span class="section-icon">🏗️</span>
+    <span class="section-title">预训练方向</span>
+    <span class="section-count">4 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="https://huggingface.co/blog/amazon/foundation-model-building-blocks" target="_blank" rel="noopener">Building Blocks for Foundation Model Training and Inference on AWS</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;HuggingFaceBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-11</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">预训练</span><span class="kw">AWS</span><span class="kw">分布式训练</span><span class="kw">推理优化</span><span class="kw">大语言模型</span></div>
+  <div class="summary">本文介绍了在AWS上进行大语言模型训练和推理的基础设施构建模块。重点讨论了如何利用AWS的计算实例、存储和网络服务来支持大规模预训练任务。同时涵盖了模型分布式训练的策略和推理优化的实践方法。文章为在云端构建高效的大模型训练流水线提供了系统性指导。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://magazine.sebastianraschka.com/p/recent-developments-in-llm-architectures" target="_blank" rel="noopener">Recent Developments in LLM Architectures: KV Sharing, mHC, and Compressed Attention</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;AheadOfAI</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-16</span>
+    <span class="score-badge score-7">7/10</span>
+  </div>
+  <div class="keywords"><span class="kw">KV Cache Sharing</span><span class="kw">Compressed Attention</span><span class="kw">mHC</span><span class="kw">Long-Context</span><span class="kw">LLM Architecture</span></div>
+  <div class="summary">本文分析了大语言模型架构的最新进展，重点关注KV缓存共享、多头压缩注意力（mHC）及压缩注意力机制等技术。这些创新主要针对长上下文场景下的推理成本优化问题，以Gemma 4和DeepSeek V4等开源模型为代表案例。KV共享技术通过减少键值对的冗余存储显著降低显存占用，而压缩注意力则在保持模型性能的同时提升计算效率。这些架构改进直接影响预训练模型的设计选择，对降低训练与推理成本具有重要意义。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://huggingface.co/blog/ibm-granite/granite-embedding-multilingual-r2" target="_blank" rel="noopener">Granite Embedding Multilingual R2: Open Apache 2.0 Multilingual Embeddings with 32K Context — Best Sub-100M Retrieval Quality</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;HuggingFaceBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-14</span>
+    <span class="score-badge score-6">6/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Embedding</span><span class="kw">Multilingual</span><span class="kw">32K Context</span><span class="kw">RAG</span><span class="kw">Retrieval</span></div>
+  <div class="summary">Granite Embedding Multilingual R2是IBM发布的开源多语言嵌入模型，采用Apache 2.0许可证。该模型参数量低于1亿，支持32K超长上下文窗口，在检索任务上取得了同等规模模型中的最佳性能。模型专注于多语言文本嵌入表示，适用于RAG等信息检索场景，兼顾开放性与实用性。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://machinelearning.substack.com/p/issue-387-the-ml-engineer" target="_blank" rel="noopener">Issue #387 - The ML Engineer 🤖</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;MLEngineer</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-17</span>
+    <span class="score-badge score-5">5/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Foundation Model</span><span class="kw">Time Series</span><span class="kw">SWE Dataset</span><span class="kw">Scaling</span><span class="kw">TabPFN</span></div>
+  <div class="summary">本期ML Engineer简报涵盖多个前沿研究进展。Toto 2.0是新一代时间序列基础模型，TabPFN-3专注于表格数据的基础模型研究。Stanford发布SWE真实世界数据集，DeepMind的AlphaEvolve探讨了扩展对模型能力的影响。Mozilla则对Mithos系统中的安全漏洞进行了分析与披露。</div>
+</div>
+</div>
+<div class="section">
+  <div class="section-header post_training">
+    <span class="section-icon">🎯</span>
+    <span class="section-title">后训练方向</span>
+    <span class="section-count">0 条</span>
+  </div>
+  <p class="empty-section">本周暂无相关内容</p>
+</div>
+<div class="section">
+  <div class="section-header agent">
+    <span class="section-icon">🤖</span>
+    <span class="section-title">LLM Agent 方向</span>
+    <span class="section-count">5 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="https://www.microsoft.com/en-us/research/blog/socialreasoning-bench-measuring-whether-ai-agents-act-in-users-best-interests/" target="_blank" rel="noopener">SocialReasoning-Bench: Measuring whether AI agents act in users’ best interests</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;MicrosoftResearch</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-11</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">benchmark</span><span class="kw">social reasoning</span><span class="kw">user alignment</span><span class="kw">evaluation</span></div>
+  <div class="summary">微软研究院提出SocialReasoning-Bench基准，专门用于评测AI智能体是否真正维护用户利益。研究发现，跨多个模型存在一种稳定规律：智能体能够胜任地执行任务，但即使给出明确的优化用户利益的指令，也无法持续改善用户的处境。该工作揭示了当前LLM智能体在社会推理和用户利益对齐方面的系统性缺陷。这一评测框架为未来提升智能体的价值对齐能力提供了重要参考基准。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://deepmind.google/blog/gemini-3-5-frontier-intelligence-with-action/" target="_blank" rel="noopener">Gemini 3.5: frontier intelligence with action</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;DeepMindBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-15</span>
+    <span class="score-badge score-7">7/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Gemini</span><span class="kw">LLM Agent</span><span class="kw">agentic workflow</span><span class="kw">frontier model</span></div>
+  <div class="summary">Gemini 3.5是谷歌DeepMind发布的新一代前沿大语言模型，专为执行复杂的智能体工作流而设计。该模型着重强调在自主代理场景下的能力提升，支持多步骤复杂任务的自动化执行。其核心定位是将强大的推理能力与行动执行能力相结合，推动LLM Agent在实际应用中的落地。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://deepmind.google/blog/co-scientist-a-multi-agent-ai-partner-to-accelerate-research/" target="_blank" rel="noopener">Co-Scientist: A multi-agent AI partner to accelerate research</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;DeepMindBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-12</span>
+    <span class="score-badge score-7">7/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Multi-Agent</span><span class="kw">LLM Agent</span><span class="kw">Gemini</span><span class="kw">AI for Science</span><span class="kw">Co-Scientist</span></div>
+  <div class="summary">Co-Scientist是由DeepMind基于Gemini构建的多智能体AI协作系统，旨在帮助科研人员加速科学发现。该系统采用多Agent架构，模拟科学研究的协作过程，覆盖假设生成、实验设计等环节。其核心目标是作为研究人员的智能合作伙伴，通过AI辅助推动科学突破。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.microsoft.com/en-us/research/blog/further-notes-on-our-recent-research-on-ai-delegation-and-long-horizon-reliability/" target="_blank" rel="noopener">Further Notes on Our Recent Research on AI Delegation and Long-Horizon Reliability</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;MicrosoftResearch</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-15</span>
+    <span class="score-badge score-7">7/10</span>
+  </div>
+  <div class="keywords"><span class="kw">AI Delegation</span><span class="kw">Long-Horizon Reliability</span><span class="kw">LLM Agent</span><span class="kw">评测基准</span><span class="kw">文档完整性</span></div>
+  <div class="summary">微软研究院对其论文《LLMs Corrupt Your Documents When You Delegate》进行了进一步说明，该研究关注AI系统在委托工作流中的可靠性问题。论文旨在开发针对长时程委托任务的鲁棒评估方法，探讨LLM在代理场景下对文档完整性的潜在破坏风险。研究揭示了AI委托过程中存在的系统性可靠性挑战，对Agent系统的安全部署具有重要参考意义。该工作澄清了相关研究结论的适用范围与局限性。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://deepmind.google/blog/gemini-for-science-ai-experiments-and-tools-for-a-new-era-of-discovery/" target="_blank" rel="noopener">Gemini for Science: AI experiments and tools for a new era of discovery</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;DeepMindBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-17</span>
+    <span class="score-badge score-4">4/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Gemini</span><span class="kw">AI for Science</span><span class="kw">scientific discovery</span><span class="kw">LLM applications</span></div>
+  <div class="summary">DeepMind推出了面向科学研究的Gemini系列工具与实验项目，旨在扩大科学探索的规模与精度。该系列工具集成了大语言模型能力，用于辅助科学发现与研究。整体定位为AI赋能科学领域的应用探索，涵盖多种科学场景的实验性工具。</div>
+</div>
+</div>
+</div>
+
+<footer>
+  <div>LLM 前沿技术周报 · 2026-W20 · 生成时间：2026-06-10 19:08 CST · 处理耗时：1239s</div>
+  <div style="margin-top:5px;color:#475569;">由 Claude AI 辅助生成，内容来源：arXiv · 量子位 · 机器之心</div>
+</footer>
+
+</body>
+</html>

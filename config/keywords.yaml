@@ -44,9 +44,12 @@ directions:
       - inference efficiency
       - speculative decoding
       - KV cache
-      - multimodal
-      - vision language
       - cross-lingual
+      - multilingual
+      - byte-level
+      - subword
+      - vocabulary
+      - embedding
     zh:
       - 预训练
       - 数据配比
@@ -68,16 +71,12 @@ directions:
       - 模型压缩
       - 量化
       - 推理效率
-      - 多模态
-      - 视觉语言
+      - 多语言
+      - 词表
 
   post_training:
     en:
-      - RLHF
-      - RLAIF
       - DPO
-      - PPO
-      - reward model
       - alignment
       - instruction tuning
       - instruction following
@@ -86,12 +85,10 @@ directions:
       - preference learning
       - preference optimization
       - Constitutional AI
-      - safe RLHF
       - rejection sampling
       - KTO
       - SimPO
       - online DPO
-      - offline RL
       - value alignment
       - human feedback
       - GRPO
@@ -100,9 +97,6 @@ directions:
       - chat model
       - helpfulness
       - harmlessness
-      - reinforcement learning from
-      - reward hacking
-      - reward shaping
       - safety training
       - red teaming
       - jailbreak
@@ -119,9 +113,13 @@ directions:
       - hallucination
       - factuality
       - truthfulness
+      - calibration
+      - model safety
+      - toxicity
+      - bias
+      - fairness
     zh:
       - 后训练
-      - 强化学习
       - 奖励模型
       - 对齐
       - 偏好学习
@@ -136,6 +134,8 @@ directions:
       - 评测
       - 基准测试
       - 参数高效
+      - 有害性
+      - 偏见
 
   agent:
     en:
@@ -190,8 +190,13 @@ directions:
       - long chain of thought
       - long CoT
       - o1
-      - deep seek
       - deepseek-r1
+      - context retrieval
+      - knowledge graph
+      - structured output
+      - prompt engineering
+      - few-shot
+      - zero-shot
     zh:
       - 智能体
       - 工具调用
@@ -210,6 +215,9 @@ directions:
       - 数学推理
       - 逐步推理
       - 测试时计算
+      - 知识图谱
+      - 结构化输出
+      - 提示工程
 
 # 全局排除词（内容含这些词且不含方向词则排除）
 exclude:
@@ -224,3 +232,27 @@ exclude:
     - remote sensing
     - satellite imagery
     - climate model
+    - computer vision
+    - image classification
+    - image generation
+    - diffusion model
+    - text-to-image
+    - video generation
+    - reinforcement learning from
+    - RLHF
+    - RLAIF
+    - PPO
+    - reward model
+    - reward hacking
+    - reward shaping
+    - offline RL
+  zh:
+    - 医学影像
+    - 药物发现
+    - 自动驾驶
+    - 遥感
+    - 图像生成
+    - 视频生成
+    - 扩散模型
+    - 强化学习
+    - 奖励模型
