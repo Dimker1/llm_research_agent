@@ -128,11 +128,12 @@ class Database:
             """SELECT i.*, a.relevance_score, a.direction, a.summary_zh, a.keywords, a.reason
                FROM items i
                JOIN analyses a ON i.id = a.item_id
-               WHERE DATE(a.analyzed_at) BETWEEN ? AND ?
+               WHERE (DATE(a.analyzed_at) BETWEEN ? AND ?
+                      OR DATE(i.published) BETWEEN ? AND ?)
                  AND a.relevance_score >= ?
                  AND a.direction != 'other'
                ORDER BY a.direction, a.relevance_score DESC""",
-            (start_date, end_date, min_score),
+            (start_date, end_date, start_date, end_date, min_score),
         )
         rows = cur.fetchall()
         results = []

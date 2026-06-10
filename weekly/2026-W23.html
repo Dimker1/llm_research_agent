@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LLM 周报 | 2026-W23</title>
+  <style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface2: #273349;
+  --border: #334155;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-bright: #f8fafc;
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --code-bg: #0d1117;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+a { color: var(--primary-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 45%, #042f2e 100%);
+  padding: 56px 24px 44px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99,102,241,.18), transparent);
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(99,102,241,.2);
+  border: 1px solid var(--primary);
+  color: var(--primary-light);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 14px; border-radius: 999px;
+  margin-bottom: 18px;
+  position: relative;
+}
+.hero h1 {
+  font-size: clamp(22px, 4vw, 38px);
+  font-weight: 800; color: var(--text-bright);
+  line-height: 1.2; margin-bottom: 10px;
+  position: relative;
+}
+.hero h1 span { color: var(--primary-light); }
+.hero-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; position: relative; }
+.hero-meta {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;
+  font-size: 13px; color: var(--text-muted); position: relative;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+/* LAYOUT */
+.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+.content { padding: 44px 0 72px; }
+
+/* STATS */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px; margin-bottom: 40px;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; text-align: center;
+}
+.stat-value { font-size: 30px; font-weight: 800; color: var(--primary-light); line-height: 1; margin-bottom: 6px; }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .07em; }
+
+/* SECTION */
+.section { margin-bottom: 48px; }
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 2px solid;
+}
+.section-header.pretraining { border-color: #6366f1; }
+.section-header.post_training { border-color: #10b981; }
+.section-header.agent { border-color: #f59e0b; }
+.section-icon { font-size: 22px; }
+.section-title { font-size: 18px; font-weight: 700; color: var(--text-bright); }
+.section-count {
+  margin-left: auto; font-size: 12px; font-weight: 600;
+  padding: 2px 10px; border-radius: 999px;
+  background: rgba(99,102,241,.15); color: var(--primary-light);
+}
+.section-header.post_training .section-count { background: rgba(16,185,129,.15); color: #6ee7b7; }
+.section-header.agent .section-count { background: rgba(245,158,11,.15); color: #fcd34d; }
+
+/* ITEM CARD */
+.item-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; margin-bottom: 14px;
+  transition: border-color .2s;
+}
+.item-card:hover { border-color: var(--primary); }
+.item-title {
+  font-size: 15px; font-weight: 700; color: var(--text-bright);
+  margin-bottom: 10px; line-height: 1.4;
+}
+.item-title a { color: var(--text-bright); }
+.item-title a:hover { color: var(--primary-light); text-decoration: none; }
+.item-meta {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  margin-bottom: 12px; font-size: 12px; color: var(--text-muted);
+}
+.meta-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(148,163,184,.1); border-radius: 6px;
+  padding: 3px 8px; white-space: nowrap;
+}
+.meta-badge strong { color: var(--text-bright); }
+.score-badge {
+  background: rgba(99,102,241,.2); color: #a5b4fc;
+  border-radius: 6px; padding: 3px 8px; font-weight: 700;
+}
+.score-9, .score-10 { background: rgba(16,185,129,.2); color: #6ee7b7; }
+.score-7, .score-8 { background: rgba(99,102,241,.2); color: #a5b4fc; }
+.score-5, .score-6 { background: rgba(245,158,11,.15); color: #fcd34d; }
+.keywords { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.kw {
+  font-size: 11px; font-family: 'SF Mono', Consolas, monospace;
+  background: rgba(99,102,241,.15); color: #c4b5fd;
+  border-radius: 4px; padding: 2px 7px;
+}
+.summary {
+  font-size: 13px; color: var(--text-muted); line-height: 1.7;
+  border-left: 3px solid var(--border);
+  padding-left: 12px; margin-top: 8px;
+}
+.empty-section {
+  color: var(--text-muted); font-size: 14px; font-style: italic;
+  padding: 16px 0;
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border); padding: 22px;
+  text-align: center; font-size: 12px; color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">LLM 前沿技术周报</div>
+  <h1>📚 <span>2026-W23</span> 周报</h1>
+  <p class="hero-sub">覆盖时间：2026-06-01 → 2026-06-07</p>
+  <p class="hero-sub">来源：<strong>arxiv</strong>(500) &nbsp;|&nbsp; <strong>量子位</strong>(10) &nbsp;|&nbsp; <strong>雷峰网</strong>(20) &nbsp;|&nbsp; <strong>宝玉博客</strong>(30) &nbsp;|&nbsp; <strong>AheadOfAI</strong>(20) &nbsp;|&nbsp; <strong>ImportAI</strong>(20) &nbsp;|&nbsp; <strong>Interconnects</strong>(20) &nbsp;|&nbsp; <strong>TheGradient</strong>(15) &nbsp;|&nbsp; <strong>LastWeekInAI</strong>(20) &nbsp;|&nbsp; <strong>ChipHuyen</strong>(10) &nbsp;|&nbsp; <strong>EugeneYan</strong>(30) &nbsp;|&nbsp; <strong>SimonWillison</strong>(30) &nbsp;|&nbsp; <strong>AISnakeOil</strong>(20) &nbsp;|&nbsp; <strong>MLEngineer</strong>(20) &nbsp;|&nbsp; <strong>HuggingFaceBlog</strong>(30) &nbsp;|&nbsp; <strong>OpenAIBlog</strong>(30) &nbsp;|&nbsp; <strong>DeepMindBlog</strong>(30) &nbsp;|&nbsp; <strong>AlignmentForum</strong>(10) &nbsp;|&nbsp; <strong>Reddit_ML</strong>(25) &nbsp;|&nbsp; <strong>Reddit_LocalLLaMA</strong>(25)</p>
+  <div class="hero-meta">
+    <span>📄 精选 31 条内容</span>
+    <span>🏗️ 预训练 1 条</span>
+    <span>🎯 后训练 15 条</span>
+    <span>🤖 Agent 15 条</span>
+  </div>
+</div>
+
+<div class="container content">
+  
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-value">31</div>
+    <div class="stat-label">精选总条目</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#818cf8">1</div>
+    <div class="stat-label">🏗️ 预训练</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#6ee7b7">15</div>
+    <div class="stat-label">🎯 后训练</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#fcd34d">15</div>
+    <div class="stat-label">🤖 LLM Agent</div>
+  </div>
+</div>
+  
+<div class="section">
+  <div class="section-header pretraining">
+    <span class="section-icon">🏗️</span>
+    <span class="section-title">预训练方向</span>
+    <span class="section-count">1 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="https://simonwillison.net/2026/Jun/2/microsofts-new-models/#atom-everything" target="_blank" rel="noopener">Microsoft's new MAI models</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;SimonWillison</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-02</span>
+    <span class="score-badge score-6">6/10</span>
+  </div>
+  <div class="keywords"><span class="kw">MAI-Thinking-1</span><span class="kw">MAI-Code-1-Flash</span><span class="kw">参数效率</span><span class="kw">模型训练</span><span class="kw">GitHub Copilot</span></div>
+  <div class="summary">微软发布了两个新的文本大语言模型：MAI-Thinking-1 和 MAI-Code-1-Flash。MAI-Thinking-1 是一个推理模型，总参数量为 1T，但仅有 35B 活跃参数，并声称在盲测中优于 Sonnet 4.6。MAI-Code-1-Flash 专门为 GitHub Copilot 和 VS Code 设计，总参数 137B，活跃参数 5B。这些模型从零开始训练，使用企业级干净数据，且没有使用第三方模型蒸馏。文章还关注了低参数模型在成本和性能上的优势。</div>
+</div>
+</div>
+<div class="section">
+  <div class="section-header post_training">
+    <span class="section-icon">🎯</span>
+    <span class="section-title">后训练方向</span>
+    <span class="section-count">15 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08815v1" target="_blank" rel="noopener">Momentum for Reasoning: Dense Intrinsic Signals in Policy Optimization</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Hao Chen, Zhanming Shen, Liyao Li 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">GRPO</span><span class="kw">policy optimization</span><span class="kw">reasoning</span><span class="kw">intrinsic reward</span></div>
+  <div class="summary">本文针对基于可验证奖励的强化学习（RLVR）在大语言模型推理训练中存在的两种结构性失效模式进行研究：零优势坍塌（所有rollout结果相同导致梯度消失）和幻觉确定性（模型对错误输出越来越自信）。作者提出ISPO方法，通过利用策略自身条件概率计算内在信号来稠密化奖励，包括序列级信号（衡量思考轨迹对最终答案的信息量）和token级方向性奖励（惩罚关键决策token处的高置信度错误预测）。在三个基础模型和五个数学推理基准上，ISPO持续优于竞争基线，在零优势坍塌最频繁的高难度基准上提升最为显著，训练动态诊断也证实两种失效模式均得到改善。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08543v1" target="_blank" rel="noopener">PAEC: Position-Aware Entropy Calibration for LLM Reasoning in RLVR</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Shumeng Yang, Yisu Liu, Jiayi Zheng 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">entropy calibration</span><span class="kw">policy entropy collapse</span><span class="kw">LLM reasoning</span><span class="kw">token-level exploration</span></div>
+  <div class="summary">本文针对RLVR训练中大语言模型推理时出现的策略熵崩溃问题，提出了位置感知熵校准方法PAEC。该方法通过局部top-p熵和top-two候选竞争构建软掩码，仅对决策敏感的token位置施加基于锚点的下界惩罚，从而防止关键位置的熵崩溃。与全局均匀熵正则化不同，PAEC实现了对推理轨迹中决策相关位置的选择性探索分配。在五个数学推理基准上的实验表明，PAEC在多数投票宏平均性能上超越强基线，尤其在AIME风格任务上有明显提升。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08501v1" target="_blank" rel="noopener">Back on Track: Aligning Rewards and States for Reasoning in Diffusion Large Language Models</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yawen Shao, Jie Xiao, Kai Zhu 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLHF</span><span class="kw">diffusion LLM</span><span class="kw">process reward</span><span class="kw">PAPO</span><span class="kw">reinforcement learning</span></div>
+  <div class="summary">本文针对扩散大语言模型（dLLMs）中强化学习训练存在的双重错位问题提出了解决方案。具体而言，稀疏终端奖励被不加区分地分配给所有中间步骤（过程奖励错位），且策略更新常被引导至脱离真实轨迹的人工状态（状态轨迹错位）。为此，作者提出过程对齐策略优化框架《PAPO》，通过步骤感知过程奖励《SPR》将稀疏奖励转化为密集逐步信用，并通过熵引导历史重演《EHR》在高不确定性步骤回放真实轨迹。在GSM8K、MATH500、Countdown和Sudoku四个基准上，PAPO相较基线分别取得最高4.5%、4.8%、42.2%和16.1%的性能提升。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08446v1" target="_blank" rel="noopener">Sparrow: Sparse Rollout for Stable and Efficient Long-context RL of Large Language Models</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yang Zhou, Ranajoy Sadhukhan, Zhaofeng Sun 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">sparse attention</span><span class="kw">long-context RL</span><span class="kw">rollout efficiency</span><span class="kw">LoRA distillation</span></div>
+  <div class="summary">本文提出Sparrow方法，通过稀疏注意力机制加速大语言模型强化学习训练中的长上下文推演生成。核心发现是稀疏推演的崩溃并非由所有token均匀退化导致，而是由少数token的actor-policy不匹配程度决定。作者设计了动态稀疏度调度策略，将每步生成中per-token不匹配分布的下尾统计量维持在固定阈值以保证训练稳定性。在Qwen3系列模型上实现了2.0x至2.4x的推演加速，同时保持训练效果。此外还提出DistillSparse方法，通过轻量级LoRA蒸馏进一步提升稀疏度和加速比。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08432v1" target="_blank" rel="noopener">Trajectory-Refined Distillation</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Li Jiang, Haoran Xu, Yichuan Ding 等</span>
+  </div>
+  <div class="keywords"><span class="kw">On-policy Distillation</span><span class="kw">Knowledge Distillation</span><span class="kw">TRD</span><span class="kw">LLM post-training</span><span class="kw">reasoning</span></div>
+  <div class="summary">本文研究了大语言模型后训练中的在线策略蒸馏（OPD）问题，发现其存在一种称为『前缀失败』的结构性缺陷，导致教师分布呈双峰混合且梯度碎片化，而仅靠token级损失调整无法解决。为此，作者提出轨迹精炼蒸馏（TRD）方法，在教师指导下对学生的推理轨迹进行轨迹级修正，从根源上缓解前缀失败问题。TRD还能在原始推理路径已正确时引导学生探索多样化的有效推导路径，提升推理覆盖度。该方法同样适用于在线策略自蒸馏（OPSD）场景，在多个基准和多种规模模型上均取得了一致性的性能提升。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08346v1" target="_blank" rel="noopener">CATPO: Critique-Augmented Tree Policy Optimization</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-06</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Ayush Singh, Umang Goyal, Ankur Dahiya</span>
+  </div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">tree-structured rollout</span><span class="kw">policy optimization</span><span class="kw">critique-guided healing</span><span class="kw">GRPO</span></div>
+  <div class="summary">本文提出CATPO（批评增强树策略优化），旨在改进基于树结构采样的强化学习训练效率。该方法通过树信息量评分函数F(T)衡量每棵树的训练价值，识别低信息量树（全成功、全失败或策略已能预测奖励）以减少无效计算。对于全部分支均失败的死亡树，CATPO引入批评引导修复机制，定位最浅失败点并生成自然语言批评以嫁接改进续写。最终通过信息量加权损失函数，将梯度更新集中于最有价值的树，在AIME24等四个基准上以Qwen2.5-Math-1.5B实现37.5%的宏平均准确率，分别超越TreeRPO和GRPO达1.9%和4.8%。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://huggingface.co/blog/Dharma-AI/direct-preference-optimization-beyond-chatbots" target="_blank" rel="noopener">Direct Preference Optimization Beyond Chatbots</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;HuggingFaceBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-03</span>
+    <span class="score-badge score-9">9/10</span>
+  </div>
+  <div class="keywords"><span class="kw">DPO</span><span class="kw">RLHF</span><span class="kw">偏好优化</span><span class="kw">后训练对齐</span><span class="kw">LLM fine-tuning</span></div>
+  <div class="summary">本文探讨了直接偏好优化（DPO）在聊天机器人场景之外的广泛应用潜力。文章分析了DPO作为RLHF替代方案的核心优势，包括训练稳定性更高、无需单独的奖励模型等特点。同时介绍了DPO在代码生成、摘要、翻译等多种NLP任务中的实际落地案例。文章还讨论了DPO的局限性及未来改进方向，为研究者提供了实践指导。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08625v1" target="_blank" rel="noopener">From Holistic Evaluation to Structured Criteria: Rubrics Across the Evolving LLM Landscape</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Hao Chen, Ziyu Han, Yukun Yan 等</span>
+  </div>
+  <div class="keywords"><span class="kw">Rubric</span><span class="kw">RLHF</span><span class="kw">LLM Evaluation</span><span class="kw">Safety Alignment</span><span class="kw">Reward Signal</span></div>
+  <div class="summary">本文提出以评分标准（rubric）作为统一框架，系统梳理其在大语言模型评估、强化学习与安全对齐中的演化规律。作者将rubric定义为将复杂质量判断转化为结构化、可操作标准的显式准则集，并揭示其在不同研究线索中反复出现并非偶然。Rubric在三个层次上发挥作用：评估层面分解整体判断为可验证维度、训练层面提供过程级密集反馈信号、内在层面从模型行为中动态涌现以驱动自我改进。文章还系统评估了rubric的可靠性与安全威胁，并调研了多领域基于rubric的基准测试，最终论证rubric是连接人类意图与机器行为的持久桥梁。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08850v1" target="_blank" rel="noopener">Intrinsic Selection and Particle Resampling for Inference-Time Scaling Beyond Domain Verifiability</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-7">7/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Giorgio Giannone, Mustafa Eyceoz, Shabana Baig 等</span>
+  </div>
+  <div class="keywords"><span class="kw">Inference-Time Scaling</span><span class="kw">Particle Filtering</span><span class="kw">entropy-based selection</span><span class="kw">test-time compute</span><span class="kw">reasoning</span></div>
+  <div class="summary">本文提出了一种无需真实标签或训练奖励模型的推理时扩展框架，核心思想是利用并行样本集的内在统计特征（长度调整后的尾部熵）作为解决方案质量的判别信号。该框架包含三个组件：内在选择（iS）用于候选答案后验排序、内在粒子过滤（iPF）用于步骤级重采样以提升困难数学问题的pass@1表现、以及粒子蒸馏（dPF）通过早期logit混合和KL引导重采样来纠正系统性推理错误。实验表明，该方法在数学、工程设计和临床响应等多个领域均取得显著提升，工程设计选择比基线提升20%，复杂临床响应增益高达26.5%。该方法无需外部验证器或精确真实值，可广泛应用于通用、领域专用和多模态架构。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08728v1" target="_blank" rel="noopener">Artificial Intelligence for Mathematical Reasoning: An Integrated Survey of Language Models, Neuro-symbolic Systems, and Verified Discovery</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-7">7/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Syed Rifat Raiyan, Mohsinul Kabir, Hasan Mahmud 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM</span><span class="kw">Mathematical Reasoning</span><span class="kw">RLVR</span><span class="kw">CoT</span><span class="kw">Neuro-symbolic</span></div>
+  <div class="summary">本文是一篇关于AI数学推理的综合综述，系统梳理了从早期规则系统到当代大语言模型的发展脉络。综述涵盖非正式推理、形式化证明、数学发现以及推理与训练技术四个维度，重点分析了CoT提示、工具使用、过程奖励模型和RLVR等技术。文章还全面整理了各类数学推理基准测试，并深入探讨了奖励破解、脆弱形式化等失败模式，最后指出了验证发现工作流和推理效率等未来方向。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08676v1" target="_blank" rel="noopener">Lost in the Flow with Code Talkers: Unveiling the Instruction-Tuning Tax of Large Language Models in Code Tasks</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-7">7/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Shi Ying Chang, Chiok Yew Ho, Yichen Li 等</span>
+  </div>
+  <div class="keywords"><span class="kw">instruction tuning</span><span class="kw">Code LLM</span><span class="kw">code infilling</span><span class="kw">post-training</span><span class="kw">instruction-following</span></div>
+  <div class="summary">本文首次系统研究了指令微调对代码大语言模型在不同编程模式下的影响，提出了「指令微调税」概念，揭示了指令微调带来的关键权衡问题。研究发现，指令微调虽然提升了模型遵循指令和利用结构化引导的能力，但往往以削弱代码填充性能为代价。通过定性与定量分析，包括失败类型手动分类、生成忠实度行为指标及微调中间检查点评估，作者总结了七项发现和四项启示，为AI编程工具的开发提供了新视角。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08571v1" target="_blank" rel="noopener">Calibration of Structured Ignorance Certificates for Diagnosing Unknown Unknowns in Reasoning Models</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-7">7/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Subramanyam Sahoo</span>
+  </div>
+  <div class="keywords"><span class="kw">GRPO</span><span class="kw">Unknown Unknowns</span><span class="kw">Structured Ignorance Certificates</span><span class="kw">hallucination mitigation</span><span class="kw">epistemic calibration</span></div>
+  <div class="summary">本文针对大语言模型频繁产生幻觉而非承认无知的问题，提出了结构化无知证书（SICs）这一JSON格式输出框架，要求模型明确指出缺失的知识领域交叉点并生成有效检索查询。研究者构建了包含7347个样本的跨领域未知-未知数据集，并使用群体相对策略优化（GRPO）对14B参数模型进行微调，结合检索实用性、概念特异性和格式有效性的复合奖励函数。实验在735个测试问题上取得了99.46%的JSON有效率和0.967的证书特异性均分，证明了显式认知结构化是一种可学习且可量化的能力。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08545v1" target="_blank" rel="noopener">Ishigaki-IDS: An Open-Weight Verifier-Aware Model for Information Delivery Specification Drafting in Building Information Modeling</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-7">7/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Ryo Kanazawa, Koyo Hidaka, Teppei Miyamoto 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLHF</span><span class="kw">continued pretraining</span><span class="kw">supervised fine-tuning</span><span class="kw">verifiable rewards</span><span class="kw">BIM</span></div>
+  <div class="summary">本文提出Ishigaki-IDS，一个专为建筑信息模型（BIM）领域设计的开源权重大语言模型，用于生成符合验证器要求的信息交付规范（IDS）草稿。该模型结合了BIM/IDS语料上的持续预训练、监督微调以及基于外部验证器可验证奖励的强化学习三阶段训练流程。在166个专家标注的基准测试中，8B模型的IDSAuditPass得分为0.651，显著优于Claude Opus 4.5的0.331；14B变体进一步达到0.753。在六位BIM从业者的实际工作流测试中，Ishigaki辅助创作将工作时间减少了54.7%，验证了验证器感知生成方法在降低IDS创作门槛上的实用价值。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08633v1" target="_blank" rel="noopener">Towards Long-Horizon Vessel Trajectory and Destination Forecasting with Reasoning Large Language Models</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-6">6/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Hongwei Wang, Miao Zhou, Fengde Wang 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">post-training</span><span class="kw">vessel trajectory prediction</span><span class="kw">Reinforcement Learning</span><span class="kw">LLM fine-tuning</span></div>
+  <div class="summary">本文针对长期海上船舶轨迹预测问题，提出了一种基于可验证奖励强化学习（RLVR）的大语言模型后训练框架。研究构建了基于AIS数据的基准数据集，包含60天历史轨迹和30天预测视野，并将轨迹转换为语义文本表示用于强化学习提示构建。RLVR通过物理有效性约束、早期加权轨迹监督以及分层匹配和课程学习来对齐LLM与海事预测目标。实验表明，4B参数的RLVR训练LLM在综合性能上优于更大规模模型，说明奖励兼容优化和任务特定容量匹配比单纯增大模型规模更为重要。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08496v1" target="_blank" rel="noopener">SAEExplainer: Interpreting SAE Features with Activation-Guided Preference Optimization</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-5">5/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Jingyi He, Haiyan Zhao, Ruxue Shi 等</span>
+  </div>
+  <div class="keywords"><span class="kw">SAE</span><span class="kw">mechanistic interpretability</span><span class="kw">activation-guided optimization</span><span class="kw">sparse features</span><span class="kw">LLM explanation</span></div>
+  <div class="summary">本文提出SAEExplainer框架，旨在解决稀疏自编码器（SAE）特征解释性不足的问题。该框架以激活分数作为奖励信号，训练模型进行自我修正和迭代自举，通过两轮优化过程持续提升解释能力。SAEExplainer能有效减少解释幻觉并强化因果触发模式，在多项评估指标上优于现有基线方法，尤其在因果触发和判别激活方面表现突出。</div>
+</div>
+</div>
+<div class="section">
+  <div class="section-header agent">
+    <span class="section-icon">🤖</span>
+    <span class="section-title">LLM Agent 方向</span>
+    <span class="section-count">15 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08875v1" target="_blank" rel="noopener">Can the Environment Speak for Itself? $T^{2}$-GRPO: A Turn-Trajectory Group Relative Policy Optimization for Caregiver Agents</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yutong Song, Jiang Wu, Pengfei Zhang 等</span>
+  </div>
+  <div class="keywords"><span class="kw">GRPO</span><span class="kw">LLM Agent</span><span class="kw">Reinforcement Learning</span><span class="kw">Reward Shaping</span><span class="kw">Caregiver Agent</span></div>
+  <div class="summary">本文提出T²-GRPO框架，专为痴呆症护理场景中的长时域看护智能体优化大语言模型。该框架将看护任务的强化学习解耦为两个归一化奖励层次：从冻结的痴呆症患者模拟器状态转变中直接提取稠密的回合级奖励，同时结合轨迹级评估奖励。通过独立的中心秩归一化方法融合异质奖励信号，并引入二元硬否决机制确保安全约束。实验表明，T²-GRPO在情感敏感的护理场景中显著优于基线方法，能有效处理即时患者反馈、长期护理效果和安全约束。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08656v1" target="_blank" rel="noopener">From Player to Master: Enhancing Test-Time Learning of LLM Agents via Reinforcement Learning over Memory</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yishuo Cai, Xingyu Guo, Xuancheng Huang 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Memory Update</span><span class="kw">GRPO</span><span class="kw">Reinforcement Learning</span><span class="kw">Test-Time Learning</span></div>
+  <div class="summary">本文提出MemoPilot，一种即插即用的记忆副驾驶系统，通过强化学习显式训练LLM智能体的记忆更新过程，以提升测试时的学习能力。该方法将记忆更新建模为多轮决策问题，并使用多轮GRPO进行端到端优化。核心创新包括逐轮奖励信号和上下文无关的轮级优势估计，实现更细粒度的信用分配和更稳定的训练。在多轮石头剪刀布和限注德州扑克两个测试环境中，MemoPilot在Elo评分上均排名第一，超越包括DeepSeek-V3.2在内的所有基线方法。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08702v1" target="_blank" rel="noopener">ConMem: Structured Memory-Guided Adaptation in Training-Free Multi-Agent Systems</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Zhixun Tan, Qiang Chen, Tairan Huang 等</span>
+  </div>
+  <div class="keywords"><span class="kw">Multi-Agent System</span><span class="kw">Memory Graph</span><span class="kw">Training-Free</span><span class="kw">LLM Agent</span><span class="kw">Cross-Experience Coordination</span></div>
+  <div class="summary">本文提出ConMem框架，针对基于LLM的多智能体系统（MAS）在自适应能力上的不足，设计了一种无需额外训练的关系感知结构化记忆机制。该框架将历史交互轨迹提炼为结构化记忆卡片，并通过关系感知记忆图组织这些卡片，以捕获可复用的策略与线索。在运行时，ConMem根据任务需求检索记忆卡片，并通过卡片图协调解决策略冲突和依赖关系。实验表明，该方法在多个基准和主流MAS架构上均有稳定提升，同时剪枝超过50%的候选项并将规划开销降低逾80%，显著提升了推理效率。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://huggingface.co/blog/openenv-agentic-rl" target="_blank" rel="noopener">The Open Source Community is backing OpenEnv for Agentic RL</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;HuggingFaceBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Agentic RL</span><span class="kw">LLM Agent</span><span class="kw">OpenEnv</span><span class="kw">强化学习环境</span><span class="kw">开源社区</span></div>
+  <div class="summary">本文介绍了开源社区对OpenEnv项目的支持，该项目专注于智能体强化学习环境的构建。OpenEnv旨在为大语言模型Agent提供标准化的训练与评估环境，推动Agentic RL领域的开放研究。开源社区的广泛参与有助于加速Agent与环境交互能力的提升，为LLM后训练中的强化学习方法提供重要基础设施支撑。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://huggingface.co/blog/ibm-research/agent-logic-and-scalable-ai-adoption" target="_blank" rel="noopener">Beyond LLMs: Why Scalable Enterprise AI Adoption Depends on Agent Logic</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;HuggingFaceBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-01</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM</span><span class="kw">Agent Logic</span><span class="kw">Enterprise AI</span><span class="kw">Tool Calling</span></div>
+  <div class="summary">本文探讨了在大语言模型之外，企业大规模采用AI的关键在于智能体逻辑。文章指出，仅有强大的LLM不足以支撑复杂的企业级应用，需要引入可扩展的智能体架构。通过将推理、工具调用和规则引擎结合，智能体逻辑能实现更可靠的自动化和决策。这为企业AI落地提供了从模型能力到系统化部署的路径。文章强调，智能体逻辑的成熟度决定了企业AI应用的规模化潜力。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://simonwillison.net/2026/Jun/2/datasette-agent-micropython/#atom-everything" target="_blank" rel="noopener">datasette-agent-micropython 0.1a0</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;SimonWillison</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-02</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">sandboxing</span><span class="kw">datasette-agent</span><span class="kw">micropython</span><span class="kw">code execution</span><span class="kw">GPT-5.5</span></div>
+  <div class="summary">该发布介绍了 Datasette Agent 的一个新功能：利用 MicroPython 在沙盒中安全执行 Python 代码。作者希望 Agent 能自主生成并运行代码，而不会带来安全风险。当前 Alpha 版本表现良好，GPT-5.5 引擎尚未能突破沙盒限制。该工作直接涉及 LLM Agent 的代码执行能力与安全性。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08790v1" target="_blank" rel="noopener">RAILS: Verification-Native Clearing For Agentic Commerce</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-6">6/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Adrian de Valois-Franklin, Alex Bogdan</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Agentic Commerce</span><span class="kw">Clearing Protocol</span><span class="kw">Multi-Agent Systems</span><span class="kw">Verification</span></div>
+  <div class="summary">本文提出了RAILS（实时代理完整性与账本结算）系统，旨在解决自主代理商务中的「清算问题」，即如何中立地判断代理是否履行了委托义务、责任归属及后续结算动作。RAILS定义了七个核心原语（义务对象、证据信封、验证网格、清算决策、结算指令、清算护照、最终规则），并通过可接受性分级验证的形式模型提供健全性保证。其核心属性保证：任何财务重要的结算都不会由低于义务可接受性门槛的证据支持。该协议填补了工具协议、代理间通信、支付轨道等现有标准中缺失的清算原语这一空白。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08542v1" target="_blank" rel="noopener">When Video Misreads: Closed-Loop Distillation of Reading Heuristics for Exploratory Manipulation Trace QA</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-6">6/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Haizhou Ge, Yufei Jia, Yue Li 等</span>
+  </div>
+  <div class="keywords"><span class="kw">VLM</span><span class="kw">LLM Agent</span><span class="kw">Embodied AI</span><span class="kw">Prompt Distillation</span><span class="kw">Manipulation Trace QA</span></div>
+  <div class="summary">本文提出探索性操作轨迹问答任务（EMT-QA），旨在从机器人探索性操作视频中恢复最小成功动作链。研究发现现有VLM和具身多模态LLM无法可靠地从原始视频或本体感知数据中正确解读操作轨迹。为此，作者提出闭环轨迹蒸馏方法，通过编码智能体检查训练轨迹并蒸馏出单行自然语言提示（称为蒸馏阅读启发式DRH），在推理阶段无需调用智能体或更新模型权重。在三个模拟器和两个真实机器人任务上，DRH相比最佳原始模态基线将链准确率提升了+0.38至+0.47。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://simonwillison.net/2026/Jun/7/datasette-agent-edit/#atom-everything" target="_blank" rel="noopener">datasette-agent-edit 0.1a0</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;SimonWillison</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-6">6/10</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Tool Use</span><span class="kw">Agentic Editing</span><span class="kw">Datasette</span><span class="kw">Plugin</span></div>
+  <div class="summary">datasette-agent-edit 是一个为 Datasette Agent 设计的基础插件，版本0.1a0。该插件实现了一套文本编辑工具集，灵感来源于 Claude 文本编辑器的设计模式，包括 view（带行号查看文件片段）、str_replace（精确字符串替换）和 insert（指定行后插入文本）三个核心工具。其设计目标是作为通用基础层，供其他需要文本编辑能力的插件复用，覆盖 Markdown 协作编辑、大型 SQL 查询更新及 SVG 文件编辑等场景。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08710v1" target="_blank" rel="noopener">Structuring agentic AI for HPC code modernization</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-5">5/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Anthony Marinov, Igor Sfiligoi</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">code modernization</span><span class="kw">HPC</span><span class="kw">agentic AI</span><span class="kw">Fortran to C++</span></div>
+  <div class="summary">本文介绍了利用AI辅助方法对遗留科学代码NMAP-RKPM进行现代化改造的实践经验。该代码约6万行，基于RKPM的三维显式固体力学物理引擎，成功从单线程Fortran MPI应用转换为OpenMP并行的C++ MPI工具。研究发现单纯依赖LLM工具效果不足，因此开发了一套高度结构化的智能体AI方法论，包括提供人工创建的示例、确保持续可构建性及限制会话范围等策略。该方法在数月内完成了两阶段的代码现代化改造，为HPC领域的遗留代码迁移提供了实践参考。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08532v1" target="_blank" rel="noopener">DN-Hypo-Pipeline: An AI-Driven Workflow for Hypothesis Generation via Large Language Models and Scientific Explanations</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-5">5/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Lei Lin, Ronghao Wang, Chunbao Zhou 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM</span><span class="kw">hypothesis generation</span><span class="kw">scientific reasoning</span><span class="kw">LLM-as-judge</span><span class="kw">theory-guided modeling</span></div>
+  <div class="summary">本文提出DN-Hypo-Pipeline，一个基于大语言模型的AI驱动工作流，旨在通过利用科学解释作为先验知识来支持结构化科学思维和假设生成。该流程以研究论文的结论为输入，识别其背后的规律、理论和原理，并重构新的待验证科学解释。在数据科学建模领域的三篇高引用论文上进行评估，结果显示其效果优于直接生成方法。研究者还通过开发对应新算法验证了得分最高的两个生成假设，新算法超越了原论文中的基线模型。该框架不仅适用于数据科学领域，还可推广至更广泛的科学学科。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08450v1" target="_blank" rel="noopener">GIFT: LLM-Guided State-Reward Interface for Financial Reinforcement Learning</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-5">5/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yanyan Wu, Boyi Zhang, Yanlin Liu 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM</span><span class="kw">Reinforcement Learning</span><span class="kw">PPO</span><span class="kw">Reward Shaping</span><span class="kw">Financial Portfolio</span></div>
+  <div class="summary">GIFT是一个利用大语言模型指导金融强化学习中状态-奖励接口设计的框架。该框架通过因子引导的状态增强、风险规则引导的奖励塑形以及诊断引导的细化三个模块，将金融知识注入PPO训练过程中。与直接用LLM做交易决策不同，GIFT仅在训练前利用LLM设计接口，评估阶段固定接口且不再调用LLM。在多种市场环境下的滚动窗口实验表明，GIFT显著提升了样本外风险调整后的投资组合表现。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://openai.com/index/endava-frontiers" target="_blank" rel="noopener">How Endava is redesigning software delivery around AI agents</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;OpenAIBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-04</span>
+    <span class="score-badge score-5">5/10</span>
+  </div>
+  <div class="keywords"><span class="kw">AI Agent</span><span class="kw">ChatGPT Enterprise</span><span class="kw">Codex</span><span class="kw">软件交付自动化</span><span class="kw">企业AI落地</span></div>
+  <div class="summary">Endava公司正在围绕AI智能体重新设计软件交付流程，利用ChatGPT Enterprise和Codex加速软件开发与交付。该公司通过引入AI智能体自动化工作流程，大幅提升了企业级软件开发效率。文章介绍了Endava如何在整个企业内构建以AI为核心的文化，推动数字化转型。这是一个典型的企业级AI落地应用案例，展示了大语言模型在实际工程场景中的部署与使用。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://openai.com/index/chatgpt-memory-dreaming" target="_blank" rel="noopener">Dreaming: Better memory for a more helpful ChatGPT</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;OpenAIBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-04</span>
+    <span class="score-badge score-5">5/10</span>
+  </div>
+  <div class="keywords"><span class="kw">memory system</span><span class="kw">persistent context</span><span class="kw">ChatGPT</span><span class="kw">personalization</span><span class="kw">long-term memory</span></div>
+  <div class="summary">ChatGPT推出了一种新的记忆系统，能够更好地记住用户的偏好与历史上下文。该系统旨在保持对话内容的连贯性与相关性，使跨会话的交互体验更加个性化。这一功能通过持久化记忆机制提升了ChatGPT作为助手的实用性。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08729v1" target="_blank" rel="noopener">IR-SIM: A Lightweight Skill-Native Simulator for Navigation, Learning, and Benchmarking</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-4">4/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Ruihua Han, Shuai Wang, Chengyang Li 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Robot Simulation</span><span class="kw">Navigation</span><span class="kw">Benchmarking</span><span class="kw">YAML-based scenario generation</span></div>
+  <div class="summary">本文提出IR-SIM，一个轻量级的技能原生导航仿真器，旨在支持快速场景构建、基准测试和机器人学习。该仿真器通过YAML配置文件完整定义场景，涵盖移动机器人运动学、几何碰撞检测、激光雷达感知等模块。IR-SIM集成了LLM Agent技能，可通过自然语言提示自动生成和修改仿真场景，并支持自动化基准测试与训练数据生成。此外，系统提供与高保真仿真器及真实世界部署的桥接接口，降低了从原型到部署的门槛。实验验证了其在导航场景构建、碰撞避免策略训练和社会导航基准测试等多任务中的便捷性与通用性。</div>
+</div>
+</div>
+</div>
+
+<footer>
+  <div>LLM 前沿技术周报 · 2026-W23 · 生成时间：2026-06-10 16:57 CST · 处理耗时：573s</div>
+  <div style="margin-top:5px;color:#475569;">由 Claude AI 辅助生成，内容来源：arXiv · 量子位 · 机器之心</div>
+</footer>
+
+</body>
+</html>
