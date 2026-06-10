@@ -128,7 +128,7 @@ class Database:
             """SELECT i.*, a.relevance_score, a.direction, a.summary_zh, a.keywords, a.reason
                FROM items i
                JOIN analyses a ON i.id = a.item_id
-               WHERE DATE(i.published) BETWEEN ? AND ?
+               WHERE DATE(a.analyzed_at) BETWEEN ? AND ?
                  AND a.relevance_score >= ?
                  AND a.direction != 'other'
                ORDER BY a.direction, a.relevance_score DESC""",

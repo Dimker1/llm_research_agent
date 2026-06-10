@@ -146,17 +146,40 @@ def run_weekly(
     candidates = kw_filter.filter(new_items)
 
     # ── Step 3.5: 候选裁剪（防止 LLM 调用量爆炸）──
-    # 关键词命中越多 → 优先级越高；同优先级内 arXiv 优先
+    # 策略：非 arXiv 来源每个最多保留 rss_quota 条（保证多样性），arXiv 填满剩余名额
     llm_cap = cfg.get("pipeline", {}).get("max_llm_candidates", 120)
+    rss_quota = cfg.get("pipeline", {}).get("rss_quota_per_source", 5)
     if len(candidates) > llm_cap:
         original_count = len(candidates)
-        def _priority(item):
+
+        def _score(item):
             text = f"{item.title} {item.abstract}"
-            hits = sum(1 for p in kw_filter._dir_patterns.values() if p.search(text))
-            return (-hits, 0 if item.source == "arxiv" else 1)
-        candidates.sort(key=_priority)
-        candidates = candidates[:llm_cap]
-        logger.info(f"[main] candidates capped to {llm_cap} for LLM (was {original_count})")
+            return sum(1 for p in kw_filter._dir_patterns.values() if p.search(text))
+
+        # 非 arXiv：每个来源按关键词命中数取 top rss_quota
+        from collections import defaultdict
+        rss_buckets: dict[str, list] = defaultdict(list)
+        arxiv_candidates = []
+        for item in candidates:
+            if item.source == "arxiv":
+                arxiv_candidates.append(item)
+            else:
+                rss_buckets[item.source].append(item)
+
+        rss_selected = []
+        for src, bucket in rss_buckets.items():
+            bucket.sort(key=_score, reverse=True)
+            rss_selected.extend(bucket[:rss_quota])
+
+        # arXiv 填满剩余名额
+        remaining = llm_cap - len(rss_selected)
+        arxiv_candidates.sort(key=_score, reverse=True)
+        candidates = rss_selected + arxiv_candidates[:remaining]
+
+        logger.info(
+            f"[main] candidates capped to {len(candidates)} for LLM (was {original_count}): "
+            f"rss={len(rss_selected)}, arxiv={min(remaining, len(arxiv_candidates))}"
+        )
 
     if dry_run:
         logger.info(f"[main] --dry-run: {len(candidates)} candidates after filter")
@@ -178,23 +201,43 @@ def run_weekly(
     min_score = llm_cfg.get("min_relevance_score", 5)
     final_items = db.get_analyzed_items_range(start_date, end_date, min_score=min_score)
 
-    # 按相关性降序排，先取全局 Top-N，再对每个方向做上限保护
-    target_total = cfg.get("pipeline", {}).get("target_total_items", 20)
-    max_per_dir = cfg.get("pipeline", {}).get("max_items_per_direction", 10)
+    target_total = cfg.get("pipeline", {}).get("target_total_items", 40)
+    max_per_dir = cfg.get("pipeline", {}).get("max_items_per_direction", 15)
+    final_rss_quota = cfg.get("pipeline", {}).get("final_rss_quota_per_source", 3)
+    # arXiv 最多占总数的比例（剩余名额留给 RSS 来源）
+    arxiv_ratio = cfg.get("pipeline", {}).get("arxiv_max_ratio", 0.6)
+    arxiv_cap = int(target_total * arxiv_ratio)
 
     # 全局按分数降序
     final_items.sort(key=lambda x: x.relevance_score, reverse=True)
 
-    # 两轮选取：先保证每方向至少有机会，再补到 target_total
+    # 两轮选取：先保证 RSS 每源最多 final_rss_quota 条，arXiv 不超过 arxiv_cap 条
+    rss_src_counts: dict[str, int] = defaultdict(int)
     dir_counts: dict[str, int] = defaultdict(int)
+    arxiv_count = 0
     trimmed: list = []
     for item in final_items:
         if len(trimmed) >= target_total:
             break
-        if dir_counts[item.direction] < max_per_dir:
-            trimmed.append(item)
-            dir_counts[item.direction] += 1
+        if dir_counts[item.direction] >= max_per_dir:
+            continue
+        if item.source == "arxiv":
+            if arxiv_count >= arxiv_cap:
+                continue
+            arxiv_count += 1
+        else:
+            if rss_src_counts[item.source] >= final_rss_quota:
+                continue
+            rss_src_counts[item.source] += 1
+        trimmed.append(item)
+        dir_counts[item.direction] += 1
     final_items = trimmed
+
+    src_summary = defaultdict(int)
+    for item in final_items:
+        src_summary[item.source] += 1
+    logger.info(f"[main] final {len(final_items)} items: " +
+                ", ".join(f"{s}={c}" for s, c in sorted(src_summary.items(), key=lambda x: -x[1])))
 
     elapsed = time.time() - start_time
 

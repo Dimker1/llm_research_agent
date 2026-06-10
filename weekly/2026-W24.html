@@ -164,12 +164,12 @@ footer {
   <div class="hero-badge">LLM 前沿技术周报</div>
   <h1>📚 <span>2026-W24</span> 周报</h1>
   <p class="hero-sub">覆盖时间：2026-06-08 → 2026-06-10</p>
-  <p class="hero-sub">来源：<strong>arxiv</strong>(500) &nbsp;|&nbsp; <strong>量子位</strong>(10) &nbsp;|&nbsp; <strong>AheadOfAI</strong>(20) &nbsp;|&nbsp; <strong>ImportAI</strong>(20) &nbsp;|&nbsp; <strong>Interconnects</strong>(20) &nbsp;|&nbsp; <strong>TheGradient</strong>(15) &nbsp;|&nbsp; <strong>LastWeekInAI</strong>(20) &nbsp;|&nbsp; <strong>Reddit_ML</strong>(25) &nbsp;|&nbsp; <strong>Reddit_LocalLLaMA</strong>(25)</p>
+  
   <div class="hero-meta">
-    <span>📄 精选 20 条内容</span>
-    <span>🏗️ 预训练 0 条</span>
-    <span>🎯 后训练 10 条</span>
-    <span>🤖 Agent 10 条</span>
+    <span>📄 精选 33 条内容</span>
+    <span>🏗️ 预训练 3 条</span>
+    <span>🎯 后训练 15 条</span>
+    <span>🤖 Agent 15 条</span>
   </div>
 </div>
 
@@ -177,19 +177,19 @@ footer {
   
 <div class="stats-grid">
   <div class="stat-card">
-    <div class="stat-value">20</div>
+    <div class="stat-value">33</div>
     <div class="stat-label">精选总条目</div>
   </div>
   <div class="stat-card">
-    <div class="stat-value" style="color:#818cf8">0</div>
+    <div class="stat-value" style="color:#818cf8">3</div>
     <div class="stat-label">🏗️ 预训练</div>
   </div>
   <div class="stat-card">
-    <div class="stat-value" style="color:#6ee7b7">10</div>
+    <div class="stat-value" style="color:#6ee7b7">15</div>
     <div class="stat-label">🎯 后训练</div>
   </div>
   <div class="stat-card">
-    <div class="stat-value" style="color:#fcd34d">10</div>
+    <div class="stat-value" style="color:#fcd34d">15</div>
     <div class="stat-label">🤖 LLM Agent</div>
   </div>
 </div>
@@ -198,15 +198,45 @@ footer {
   <div class="section-header pretraining">
     <span class="section-icon">🏗️</span>
     <span class="section-title">预训练方向</span>
-    <span class="section-count">0 条</span>
+    <span class="section-count">3 条</span>
   </div>
-  <p class="empty-section">本周暂无相关内容</p>
+  
+<div class="item-card">
+  <div class="item-title"><a href="https://magazine.sebastianraschka.com/p/recent-developments-in-llm-architectures" target="_blank" rel="noopener">Recent Developments in LLM Architectures: KV Sharing, mHC, and Compressed Attention</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;AheadOfAI</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-16</span>
+    <span class="score-badge score-7">7/10</span>
+  </div>
+  <div class="keywords"><span class="kw">KV Cache Sharing</span><span class="kw">Compressed Attention</span><span class="kw">mHC</span><span class="kw">Long-Context</span><span class="kw">LLM Architecture</span></div>
+  <div class="summary">本文分析了大语言模型架构的最新进展，重点关注KV缓存共享、多头压缩注意力（mHC）及压缩注意力机制等技术。这些创新主要针对长上下文场景下的推理成本优化问题，以Gemma 4和DeepSeek V4等开源模型为代表案例。KV共享技术通过减少键值对的冗余存储显著降低显存占用，而压缩注意力则在保持模型性能的同时提升计算效率。这些架构改进直接影响预训练模型的设计选择，对降低训练与推理成本具有重要意义。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://huyenchip.com//2023/10/10/multimodal.html" target="_blank" rel="noopener">Multimodality and Large Multimodal Models (LMMs)</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;ChipHuyen</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2023-10-09</span>
+    <span class="score-badge score-6">6/10</span>
+  </div>
+  <div class="keywords"><span class="kw">LMM</span><span class="kw">LLM</span><span class="kw">multimodal</span><span class="kw">GPT-4V</span><span class="kw">vision-language model</span></div>
+  <div class="summary">本文介绍了多模态大模型（LMM）的概念与背景，指出传统ML模型通常只处理单一模态数据，而人类智能天然具备多模态感知能力。将图像、音频等额外模态引入大语言模型（LLM）可构建大型多模态模型（LMM），这被视为AI研究的重要前沿方向。文章还区分了LMM与其他多模态系统（如文生图模型）的本质差异，后者不包含语言模型组件。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://deepmind.google/blog/introducing-gemma-4-12b-a-unified-encoder-free-multimodal-model/" target="_blank" rel="noopener">Introducing Gemma 4 12B: a unified, encoder-free multimodal model</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;DeepMindBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-6">6/10</span>
+  </div>
+  <div class="keywords"><span class="kw">multimodal LLM</span><span class="kw">encoder-free</span><span class="kw">Gemma</span><span class="kw">unified architecture</span><span class="kw">vision-language model</span></div>
+  <div class="summary">谷歌DeepMind发布Gemma 4 12B模型，这是一个统一的、无编码器的多模态大语言模型。该模型摒弃了传统的独立视觉编码器架构，采用端到端的统一设计处理多模态输入。Gemma 4 12B以120亿参数实现了高效的多模态理解能力，支持文本与图像的联合建模。该模型代表了轻量级开放多模态模型的新进展，适合研究和部署场景。</div>
+</div>
 </div>
 <div class="section">
   <div class="section-header post_training">
     <span class="section-icon">🎯</span>
     <span class="section-title">后训练方向</span>
-    <span class="section-count">10 条</span>
+    <span class="section-count">15 条</span>
   </div>
   
 <div class="item-card">
@@ -287,44 +317,94 @@ footer {
   <div class="summary">本文针对大型推理模型的推理过程，提出了「思维模式」的概念，涵盖推理步骤间的转换方式与多样化解题路径两个维度。研究发现思维模式的多样性与模型性能存在正相关关系，并据此提出了多样化模式策略优化框架DiScO，通过强化学习鼓励模型产生更多样化的推理模式，同时在推理阶段进一步促进多样性。实验表明DiScO在多个数学推理基准上持续优于标准的组相对策略优化方法，并显著提升了模型从错误初始尝试中恢复的能力。</div>
 </div>
 <div class="item-card">
-  <div class="item-title"><a href="http://arxiv.org/abs/2606.10931v1" target="_blank" rel="noopener">It Takes One to Bias Them All: Breaking Bad with One-Shot GRPO</a></div>
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08815v1" target="_blank" rel="noopener">Momentum for Reasoning: Dense Intrinsic Signals in Policy Optimization</a></div>
   <div class="item-meta">
     <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
-    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
     <span class="score-badge score-9">9/10</span>
-    <span class="meta-badge"><strong>作者</strong>&nbsp;Naihao Deng, Yilun Zhu, Naichen Shi 等</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Hao Chen, Zhanming Shen, Liyao Li 等</span>
   </div>
-  <div class="keywords"><span class="kw">GRPO</span><span class="kw">alignment</span><span class="kw">post-training</span><span class="kw">bias</span><span class="kw">safety</span></div>
-  <div class="summary">本文研究了大语言模型对齐机制的脆弱性，发现仅需一个有偏见的样本进行GRPO训练即可系统性地破坏模型对齐。研究表明，单次GRPO训练足以诱发模型产生刻板印象驱动的推理，且这种偏见能够跨属性、类别和基准泛化。不同模型对这种攻击的易感性取决于其初始产生偏见输出的可能性。该研究揭示了后训练对齐机制的关键漏洞：仅凭单个样本即可覆盖对齐效果，对LLM安全性具有重要警示意义。</div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">GRPO</span><span class="kw">policy optimization</span><span class="kw">reasoning</span><span class="kw">intrinsic reward</span></div>
+  <div class="summary">本文针对基于可验证奖励的强化学习（RLVR）在大语言模型推理训练中存在的两种结构性失效模式进行研究：零优势坍塌（所有rollout结果相同导致梯度消失）和幻觉确定性（模型对错误输出越来越自信）。作者提出ISPO方法，通过利用策略自身条件概率计算内在信号来稠密化奖励，包括序列级信号（衡量思考轨迹对最终答案的信息量）和token级方向性奖励（惩罚关键决策token处的高置信度错误预测）。在三个基础模型和五个数学推理基准上，ISPO持续优于竞争基线，在零优势坍塌最频繁的高难度基准上提升最为显著，训练动态诊断也证实两种失效模式均得到改善。</div>
 </div>
 <div class="item-card">
-  <div class="item-title"><a href="http://arxiv.org/abs/2606.10768v1" target="_blank" rel="noopener">N-GRPO: Embedding-Level Neighbor Mixing for Enhanced Policy Optimization</a></div>
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08543v1" target="_blank" rel="noopener">PAEC: Position-Aware Entropy Calibration for LLM Reasoning in RLVR</a></div>
   <div class="item-meta">
     <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
-    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
     <span class="score-badge score-9">9/10</span>
-    <span class="meta-badge"><strong>作者</strong>&nbsp;Xukun Zhu, Hang Yu, Peng Di 等</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Shumeng Yang, Yisu Liu, Jiayi Zheng 等</span>
   </div>
-  <div class="keywords"><span class="kw">GRPO</span><span class="kw">Semantic Neighbor Mixing</span><span class="kw">embedding-level exploration</span><span class="kw">RLHF</span><span class="kw">mathematical reasoning</span></div>
-  <div class="summary">本文提出N-GRPO，一种集成到GRPO框架中的新型探索策略，旨在解决大语言模型数学推理训练中rollout阶段的多样性与语义一致性之间的矛盾。核心贡献是语义邻居混合机制（Semantic Neighbor Mixing），通过将锚点词元与其最近语义邻居的嵌入进行动态混合，在严格遵循局部语义流形的前提下注入多样性。相比于token级采样产生重复轨迹或随机噪声破坏语义一致性的问题，该方法能生成更丰富且语义连贯的解题路径。在DeepSeek-R1-Distill-Qwen系列模型上的实验表明，N-GRPO在数学推理基准上持续超越强基线，并在分布外任务上展现出良好的泛化能力。</div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">entropy calibration</span><span class="kw">policy entropy collapse</span><span class="kw">LLM reasoning</span><span class="kw">token-level exploration</span></div>
+  <div class="summary">本文针对RLVR训练中大语言模型推理时出现的策略熵崩溃问题，提出了位置感知熵校准方法PAEC。该方法通过局部top-p熵和top-two候选竞争构建软掩码，仅对决策敏感的token位置施加基于锚点的下界惩罚，从而防止关键位置的熵崩溃。与全局均匀熵正则化不同，PAEC实现了对推理轨迹中决策相关位置的选择性探索分配。在五个数学推理基准上的实验表明，PAEC在多数投票宏平均性能上超越强基线，尤其在AIME风格任务上有明显提升。</div>
 </div>
 <div class="item-card">
-  <div class="item-title"><a href="http://arxiv.org/abs/2606.10346v1" target="_blank" rel="noopener">Reasoning or Memorization? Direction-Aware Diversity Exploration in LLM Reinforcement Learning</a></div>
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08501v1" target="_blank" rel="noopener">Back on Track: Aligning Rewards and States for Reasoning in Diffusion Large Language Models</a></div>
   <div class="item-meta">
     <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yawen Shao, Jie Xiao, Kai Zhu 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLHF</span><span class="kw">diffusion LLM</span><span class="kw">process reward</span><span class="kw">PAPO</span><span class="kw">reinforcement learning</span></div>
+  <div class="summary">本文针对扩散大语言模型（dLLMs）中强化学习训练存在的双重错位问题提出了解决方案。具体而言，稀疏终端奖励被不加区分地分配给所有中间步骤（过程奖励错位），且策略更新常被引导至脱离真实轨迹的人工状态（状态轨迹错位）。为此，作者提出过程对齐策略优化框架《PAPO》，通过步骤感知过程奖励《SPR》将稀疏奖励转化为密集逐步信用，并通过熵引导历史重演《EHR》在高不确定性步骤回放真实轨迹。在GSM8K、MATH500、Countdown和Sudoku四个基准上，PAPO相较基线分别取得最高4.5%、4.8%、42.2%和16.1%的性能提升。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://magazine.sebastianraschka.com/p/the-state-of-llm-reasoning-model-training" target="_blank" rel="noopener">The State of Reinforcement Learning for LLM Reasoning</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;AheadOfAI</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2025-04-19</span>
+    <span class="score-badge score-9">9/10</span>
+  </div>
+  <div class="keywords"><span class="kw">GRPO</span><span class="kw">Reinforcement Learning</span><span class="kw">LLM Reasoning</span><span class="kw">RLHF</span><span class="kw">Post-training</span></div>
+  <div class="summary">本文系统梳理了强化学习在大语言模型推理能力提升中的最新进展，重点解析了GRPO算法的原理与实现细节。文章综合分析了多篇推理模型相关论文的新洞见，探讨了RL训练对LLM推理能力的影响机制。内容涵盖奖励建模、策略优化等关键后训练技术，为理解当前推理模型的训练范式提供了全面视角。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.reddit.com/r/LocalLLaMA/comments/1u1m8bd/finetuned_qwen257b_to_96_of_claude_haiku_on_a/" target="_blank" rel="noopener">Fine-tuned Qwen2.5-7B to 96% of Claude Haiku on a domain-specific task using ~$3 of API calls and zero human labelers</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;Reddit_LocalLLaMA</span>
     <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
     <span class="score-badge score-9">9/10</span>
-    <span class="meta-badge"><strong>作者</strong>&nbsp;Jiangnan Xia, Yucheng Shi, Yu Yang 等</span>
   </div>
-  <div class="keywords"><span class="kw">RLHF</span><span class="kw">GRPO</span><span class="kw">reasoning</span><span class="kw">exploration</span><span class="kw">reinforcement learning</span></div>
-  <div class="summary">本文提出DiRL框架，旨在解决大语言模型强化学习训练中探索方向的问题。核心思想是区分轨迹多样性来源于真正的推理过程还是记忆模式与捷径，从而避免探索偏向记忆而非推理能力提升。DiRL通过从模型表示中提取推理-记忆方向，构建方向加权梯度特征来刻画rollout更新，并对奖励进行塑形以放大推理对齐的探索、抑制记忆对齐的变化。该方法无缝集成于GRPO框架中，在数学和通用推理基准上显著超越现有探索方法。</div>
+  <div class="keywords"><span class="kw">DPO</span><span class="kw">fine-tuning</span><span class="kw">synthetic data generation</span><span class="kw">adversarial training</span><span class="kw">Qwen2.5</span></div>
+  <div class="summary">作者提出了一种名为DV-DPO的自动化数据生成与微调方法，通过三方辩论委员会机制对每个问题进行多声部推理与交叉质询，仅在对抗压力下产生真实修正时才生成DPO训练对。整个流程仅花费约3美元的API调用成本，无需人工标注，共生成1040个高质量训练对。微调后的Qwen2.5-7B在特定领域任务上达到了Claude Haiku 96%的综合表现，格式与提交准确率均达100%。作者还构建了全自动闭环系统，包含失败检测、自动红队测试、DPO对生成、重训练与重部署等环节，持续迭代优化模型。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://magazine.sebastianraschka.com/p/state-of-llms-2025" target="_blank" rel="noopener">The State Of LLMs 2025: Progress, Problems, and Predictions</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;AheadOfAI</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2025-12-30</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">inference-time scaling</span><span class="kw">DeepSeek R1</span><span class="kw">LLM benchmarks</span><span class="kw">post-training</span></div>
+  <div class="summary">本文是对2025年大语言模型发展状态的全面综述，涵盖DeepSeek R1、RLVR等重要进展。文章系统回顾了推理时扩展（inference-time scaling）、基准测试以及模型架构的最新进展。同时深入分析了当前LLM领域存在的主要问题与挑战。文章最后对2026年的技术发展趋势作出预测，具有较强的前瞻性参考价值。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.interconnects.ai/p/olmo-hybrid-and-future-llm-architectures" target="_blank" rel="noopener">Olmo Hybrid and future LLM architectures</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;Interconnects</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-03-05</span>
+    <span class="score-badge score-7">7/10</span>
+  </div>
+  <div class="keywords"><span class="kw">OLMo</span><span class="kw">Hybrid Architecture</span><span class="kw">post-training</span><span class="kw">open-source LLM</span><span class="kw">model architecture</span></div>
+  <div class="summary">本文介绍了最新的OLMo混合架构模型及其相关进展，探讨了开源后训练工具的前沿动态。文章聚焦于OLMo模型在架构层面的创新，涵盖混合模型设计与未来大语言模型架构方向的讨论。同时分析了开源社区在后训练流程工具链方面的最新发展，对研究人员具有较强参考价值。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://importai.substack.com/p/import-ai-460-reward-hacking-society" target="_blank" rel="noopener">Import AI 460: Reward hacking society, RSI data from Anthropic; and RL-based quadcopter racing</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;ImportAI</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-08</span>
+    <span class="score-badge score-5">5/10</span>
+  </div>
+  <div class="keywords"><span class="kw">reward hacking</span><span class="kw">RLHF</span><span class="kw">RSI</span><span class="kw">reinforcement learning</span><span class="kw">AI alignment</span></div>
+  <div class="summary">本期Import AI涵盖多个前沿话题，包括奖励黑客（reward hacking）现象的社会影响分析、Anthropic发布的RSI（递归自我改进）相关数据，以及基于强化学习的四旋翼无人机竞速研究。其中奖励黑客和RSI数据与LLM后训练中的RLHF对齐问题密切相关。文章还探讨了市场何时会对技术奇点进行定价这一宏观问题。整体内容属于AI研究综述性通讯，涉及RL应用与AI安全等多个方向。</div>
 </div>
 </div>
 <div class="section">
   <div class="section-header agent">
     <span class="section-icon">🤖</span>
     <span class="section-title">LLM Agent 方向</span>
-    <span class="section-count">10 条</span>
+    <span class="section-count">15 条</span>
   </div>
   
 <div class="item-card">
@@ -348,6 +428,28 @@ footer {
   </div>
   <div class="keywords"><span class="kw">Medical Agent</span><span class="kw">RLHF</span><span class="kw">SPAR++</span><span class="kw">Multi-Agent</span><span class="kw">Continuous Care</span></div>
   <div class="summary">Baichuan-M4是百川智能推出的临床级医疗大模型，专为持续护理场景设计，而非单轮问答。系统围绕三大支柱构建：统一运行时Baichuan-Harness负责强化学习训练与真实部署的一致性、工具调用及多智能体协调；核心推理模型采用持续护理强化学习框架，融合跨度级奖励建模SPAR++、推理路径压缩、课程学习及稳定策略优化；临床工具层支持患者记忆管理、权威循证检索以及文档·X光·皮肤病等多模态医学感知。在跨维度医疗评测中，Baichuan-M4在医学知识、动态问诊、长上下文记忆、循证检索及多模态理解等方面均达到领先水平，幻觉率降至3.3%。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08875v1" target="_blank" rel="noopener">Can the Environment Speak for Itself? $T^{2}$-GRPO: A Turn-Trajectory Group Relative Policy Optimization for Caregiver Agents</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yutong Song, Jiang Wu, Pengfei Zhang 等</span>
+  </div>
+  <div class="keywords"><span class="kw">GRPO</span><span class="kw">LLM Agent</span><span class="kw">Reinforcement Learning</span><span class="kw">Reward Shaping</span><span class="kw">Caregiver Agent</span></div>
+  <div class="summary">本文提出T²-GRPO框架，专为痴呆症护理场景中的长时域看护智能体优化大语言模型。该框架将看护任务的强化学习解耦为两个归一化奖励层次：从冻结的痴呆症患者模拟器状态转变中直接提取稠密的回合级奖励，同时结合轨迹级评估奖励。通过独立的中心秩归一化方法融合异质奖励信号，并引入二元硬否决机制确保安全约束。实验表明，T²-GRPO在情感敏感的护理场景中显著优于基线方法，能有效处理即时患者反馈、长期护理效果和安全约束。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.08656v1" target="_blank" rel="noopener">From Player to Master: Enhancing Test-Time Learning of LLM Agents via Reinforcement Learning over Memory</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-07</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yishuo Cai, Xingyu Guo, Xuancheng Huang 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Memory Update</span><span class="kw">GRPO</span><span class="kw">Reinforcement Learning</span><span class="kw">Test-Time Learning</span></div>
+  <div class="summary">本文提出MemoPilot，一种即插即用的记忆副驾驶系统，通过强化学习显式训练LLM智能体的记忆更新过程，以提升测试时的学习能力。该方法将记忆更新建模为多轮决策问题，并使用多轮GRPO进行端到端优化。核心创新包括逐轮奖励信号和上下文无关的轮级优势估计，实现更细粒度的信用分配和更稳定的训练。在多轮石头剪刀布和限注德州扑克两个测试环境中，MemoPilot在Elo评分上均排名第一，超越包括DeepSeek-V3.2在内的所有基线方法。</div>
 </div>
 <div class="item-card">
   <div class="item-title"><a href="http://arxiv.org/abs/2606.10917v1" target="_blank" rel="noopener">Role-Agent: Bootstrapping LLM Agents via Dual-Role Evolution</a></div>
@@ -437,11 +539,43 @@ footer {
   <div class="keywords"><span class="kw">RL for LLM Agents</span><span class="kw">credit assignment</span><span class="kw">GRPO</span><span class="kw">policy optimization</span><span class="kw">multi-turn agent</span></div>
   <div class="summary">本文提出了一种名为3SPO（状态分数监督策略优化）的新型强化学习算法，专为LLM自主智能体的多轮任务训练设计。与现有基于完整轨迹的RL算法不同，3SPO在每个步骤后基于历史成功率计算状态分数，实现逐步信用分配、自适应回放和后步策略优化，无需价值函数估计或额外辅助模型。理论上，该方法在每状态赌博机抽象框架下证明了对数分配遗憾界，并提供了样本复杂度保证。实验表明，在ALFWorld和WebShop基准上，3SPO相比GRPO分别提升了22.6%和15.6个百分点，同时实现了2.4倍更多的状态探索和1.8倍更快的收敛速度。</div>
 </div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.10684v1" target="_blank" rel="noopener">Divide and Cooperate: Role-Decomposed Multi-Agent LLM Training with Cross-Agent Learning Signals</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Jaewan Park, Solbee Cho, Jay-Yoon Lee</span>
+  </div>
+  <div class="keywords"><span class="kw">Multi-Agent</span><span class="kw">Role Decomposition</span><span class="kw">Credit Assignment</span><span class="kw">LoRA</span><span class="kw">RLHF</span></div>
+  <div class="summary">本文提出DAC（分工协作）框架，将智能体搜索任务分解为搜索和生成两个子任务，分别由专用智能体处理。生成智能体同时承担答案生成和证据充分性验证的双重角色，当证据不足时选择弃权，该弃权信号作为奖励反馈给搜索智能体，从而解决信用分配问题。搜索智能体通过难正样本证据增强，为生成智能体提供多样化挑战环境，提升其鲁棒性。实验表明，DAC基于共享骨干网络的参数高效LoRA模块，在通用和多跳问答基准上超越了依赖完整微调的单体模型基线。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.11119v1" target="_blank" rel="noopener">TRACE: A Unified Rollout Budget Allocation Framework for Efficient Agentic Reinforcement Learning</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-09</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Heming Zou, Qi Wang, Yun Qu 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">agentic RL</span><span class="kw">rollout budget allocation</span><span class="kw">tree-structured rollout</span><span class="kw">ReAct</span></div>
+  <div class="summary">本文提出TRACE框架，针对多轮智能体强化学习中的rollout资源分配问题。现有方法仅在提示级别分配采样资源，忽略了同一rollout中不同轮次的前缀信息差异。TRACE将ReAct风格的思考-动作-观察轮次建模为语义节点，形成树状rollout结构，并通过共享预测器估计各节点的条件成功概率来指导预算分配。实验表明，TRACE在相同采样成本下，使Qwen3-14B在多跳问答任务上平均准确率提升2.8个百分点，显著提升了奖励对比度和策略更新信号质量。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://baoyu.io/translations/2026-05-10/akshay-pachaar-2041146899319971922" target="_blank" rel="noopener">深度拆解：AI Agent Harness 的构造</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;宝玉博客</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-05-09</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">Orchestration Loop</span><span class="kw">Tool Use</span><span class="kw">Memory Management</span><span class="kw">Context Management</span></div>
+  <div class="summary">本文深入拆解了AI Agent Harness的核心构造，分析了Anthropic、OpenAI、Perplexity和LangChain等主流机构的Agent框架设计思路。文章重点介绍了编排循环、工具调用、记忆管理和上下文管理等关键组件，阐明这些组件如何协同将无状态大语言模型转变为具备持续执行能力的智能体。内容涵盖Agent系统的工程实现层面，对理解现代LLM Agent架构具有较强的参考价值。</div>
+</div>
 </div>
 </div>
 
 <footer>
-  <div>LLM 前沿技术周报 · 2026-W24 · 生成时间：2026-06-10 10:14 CST · 处理耗时：993s</div>
+  <div>LLM 前沿技术周报 · 2026-W24 · 生成时间：2026-06-10 13:46 CST · 处理耗时：—</div>
   <div style="margin-top:5px;color:#475569;">由 Claude AI 辅助生成，内容来源：arXiv · 量子位 · 机器之心</div>
 </footer>
 

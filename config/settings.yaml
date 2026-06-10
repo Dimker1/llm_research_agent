@@ -16,11 +16,17 @@ pipeline:
   # RSS summary 截取长度
   summary_max_chars: 1000
   # 关键词筛选后送 LLM 分析的最大候选数（防止调用量爆炸）
-  max_llm_candidates: 120
+  max_llm_candidates: 150
+  # 非 arXiv 来源（量子位、RSS 博客等）每个来源最多送 LLM 分析的条数
+  rss_quota_per_source: 4
   # 全局 Top-N：最终周报保留的总条目数（按相关度降序取最优）
-  target_total_items: 20
+  target_total_items: 40
   # 单方向最多展示条数（防止某一方向独占）
-  max_items_per_direction: 10
+  max_items_per_direction: 15
+  # 最终周报中非 arXiv 来源每个最多展示条数（保证多样性）
+  final_rss_quota_per_source: 3
+  # arXiv 最多占最终结果的比例（0.6 = 最多 60%，其余留给 RSS）
+  arxiv_max_ratio: 0.6
 
 storage:
   db_path: data/digest.db

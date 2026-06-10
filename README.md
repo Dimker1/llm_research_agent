@@ -111,15 +111,27 @@ rss:
 |------|------|------|----------|
 | arXiv (cs.CL / cs.AI / cs.LG) | 论文 | EN | 启用 |
 | 量子位 | 资讯 | ZH | 启用 |
+| 雷峰网 | 资讯 | ZH | 启用 |
+| 宝玉博客 | 翻译/分析 | ZH | 启用 |
 | AheadOfAI (Sebastian Raschka) | 博客 | EN | 启用 |
 | Import AI (Jack Clark) | 博客 | EN | 启用 |
 | Interconnects (Nathan Lambert) | 博客 | EN | 启用 |
 | The Gradient | 博客 | EN | 启用 |
 | Last Week in AI | 周报 | EN | 启用 |
+| Chip Huyen Blog | 博客 | EN | 启用 |
+| Eugene Yan | 博客 | EN | 启用 |
+| Simon Willison | 博客 | EN | 启用 |
+| AI Snake Oil | 分析 | EN | 启用 |
+| The ML Engineer | 周报 | EN | 启用 |
+| Hugging Face Blog | 官方博客 | EN | 启用 |
+| OpenAI Blog | 官方博客 | EN | 启用 |
+| DeepMind Blog | 官方博客 | EN | 启用 |
+| Alignment Forum | 社区 | EN | 启用 |
 | r/MachineLearning | 社区 | EN | 启用 |
 | r/LocalLLaMA | 社区 | EN | 启用 |
 | 机器之心 | 资讯 | ZH | 禁用（RSS 不稳定）|
 | GitHub Trending (Python/AI) | 项目 | EN | 禁用（需自建 RSSHub）|
+| Towards AI / TDS | 博客 | EN | 禁用（噪音较多）|
 
 ### 调整关键词（`config/keywords.yaml`）
 
