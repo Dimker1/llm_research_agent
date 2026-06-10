@@ -5,21 +5,66 @@ import re
 import time
 from typing import Optional
 
-import anthropic
-
 from src.models import RawItem, AnalyzedItem
 
 logger = logging.getLogger(__name__)
 
+# ── 后端选择规则 ──────────────────────────────────────────────────────────────
+# 优先级：OPENAI_API_KEY > ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN
+#
+# OpenAI 兼容（DeepSeek / MiniMax / 任意 OpenAI 格式代理）：
+#   export OPENAI_API_KEY="sk-xxx"
+#   export OPENAI_BASE_URL="https://api.deepseek.com"   # DeepSeek
+#   export OPENAI_BASE_URL="https://api.minimax.chat/v1" # MiniMax
+#   model 填对应平台的模型名，如 deepseek-chat / MiniMax-Text-01
+#
+# Anthropic（Claude 官方或代理）：
+#   export ANTHROPIC_API_KEY="sk-ant-xxx"
+#   export ANTHROPIC_BASE_URL="..."   # 可选，使用代理时设置
+#   model 填 Claude 模型名，如 claude-sonnet-4-5-20251001 / Claude-Sonnet-4.6
+# ─────────────────────────────────────────────────────────────────────────────
 
-def _make_client() -> anthropic.Anthropic:
-    """支持 ANTHROPIC_AUTH_TOKEN（京东云）和标准 ANTHROPIC_API_KEY 两种认证方式"""
-    api_key = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN", "")
-    base_url = os.environ.get("ANTHROPIC_BASE_URL")
-    kwargs = {"api_key": api_key}
-    if base_url:
-        kwargs["base_url"] = base_url
-    return anthropic.Anthropic(**kwargs)
+
+def _detect_backend() -> str:
+    if os.environ.get("OPENAI_API_KEY"):
+        return "openai"
+    return "anthropic"
+
+
+def _make_client(backend: str):
+    if backend == "openai":
+        from openai import OpenAI
+        return OpenAI(
+            api_key=os.environ["OPENAI_API_KEY"],
+            base_url=os.environ.get("OPENAI_BASE_URL"),  # None 时使用 OpenAI 官方地址
+        )
+    else:
+        import anthropic
+        api_key = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN", "")
+        kwargs = {"api_key": api_key}
+        base_url = os.environ.get("ANTHROPIC_BASE_URL")
+        if base_url:
+            kwargs["base_url"] = base_url
+        return anthropic.Anthropic(**kwargs)
+
+
+def _call_api(backend: str, client, model: str, max_tokens: int, prompt: str) -> str:
+    """统一调用，返回模型输出文本"""
+    if backend == "openai":
+        resp = client.chat.completions.create(
+            model=model,
+            max_tokens=max_tokens,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return resp.choices[0].message.content.strip()
+    else:
+        resp = client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return resp.content[0].text.strip()
+
 
 ANALYZE_PROMPT = """你是一名专注于大语言模型研究的 AI 助手。请分析以下内容并返回 JSON。
 
@@ -52,28 +97,25 @@ ANALYZE_PROMPT = """你是一名专注于大语言模型研究的 AI 助手。�
 class LLMAnalyzer:
     def __init__(
         self,
-        model: str = "Claude-Sonnet-4.6",
+        model: str = "deepseek-chat",
         max_tokens: int = 512,
         min_score: int = 5,
         max_retries: int = 2,
         abstract_max_chars: int = 2000,
     ):
-        self.client = _make_client()
+        self.backend = _detect_backend()
+        self.client = _make_client(self.backend)
         self.model = model
         self.max_tokens = max_tokens
         self.min_score = min_score
         self.max_retries = max_retries
         self.abstract_max_chars = abstract_max_chars
+        logger.info(f"[LLMAnalyzer] backend={self.backend}, model={self.model}")
 
     def _call_llm(self, prompt: str) -> Optional[dict]:
         for attempt in range(self.max_retries + 1):
             try:
-                message = self.client.messages.create(
-                    model=self.model,
-                    max_tokens=self.max_tokens,
-                    messages=[{"role": "user", "content": prompt}],
-                )
-                text = message.content[0].text.strip()
+                text = _call_api(self.backend, self.client, self.model, self.max_tokens, prompt)
                 # 去掉 ```json ... ``` 包裹
                 if text.startswith("```"):
                     text = re.sub(r"^```[a-z]*\n?", "", text)
@@ -87,13 +129,14 @@ class LLMAnalyzer:
                 logger.warning(f"[LLMAnalyzer] JSON parse error (attempt {attempt+1}): {e}")
                 if attempt < self.max_retries:
                     time.sleep(1)
-            except anthropic.RateLimitError:
-                logger.warning(f"[LLMAnalyzer] rate limit, waiting 30s...")
-                time.sleep(30)
             except Exception as e:
-                logger.error(f"[LLMAnalyzer] API error (attempt {attempt+1}): {e}")
-                if attempt < self.max_retries:
-                    time.sleep(2)
+                if "rate" in str(e).lower() or "429" in str(e):
+                    logger.warning("[LLMAnalyzer] rate limit, waiting 30s...")
+                    time.sleep(30)
+                else:
+                    logger.error(f"[LLMAnalyzer] API error (attempt {attempt+1}): {e}")
+                    if attempt < self.max_retries:
+                        time.sleep(2)
         return None
 
     def analyze_item(self, item: RawItem) -> Optional[AnalyzedItem]:
@@ -135,7 +178,6 @@ class LLMAnalyzer:
                 continue
 
             results.append(analyzed)
-            # 控制 API 调用频率
             time.sleep(0.3)
 
         logger.info(

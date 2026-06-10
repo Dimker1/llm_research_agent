@@ -18,13 +18,52 @@ pip install -r requirements.txt
 
 ### 2. 配置环境变量
 
-```bash
-export ANTHROPIC_API_KEY="sk-ant-..."
-export TELEGRAM_BOT_TOKEN="..."    # 可选，不配置则跳过推送
-export TELEGRAM_CHAT_ID="..."      # 可选
+程序会自动检测使用哪个后端：优先使用 `OPENAI_API_KEY`，未设置则使用 Anthropic。
 
-# 使用京东云等第三方代理时额外设置
+**方案 A：DeepSeek（推荐，性价比高）**
+```bash
+export OPENAI_API_KEY="sk-xxx"
+export OPENAI_BASE_URL="https://api.deepseek.com"
+# settings.yaml 中 model 填: deepseek-chat
+```
+
+**方案 B：MiniMax**
+```bash
+export OPENAI_API_KEY="xxx"
+export OPENAI_BASE_URL="https://api.minimax.chat/v1"
+# settings.yaml 中 model 填: MiniMax-Text-01
+```
+
+**方案 C：OpenAI 官方**
+```bash
+export OPENAI_API_KEY="sk-xxx"
+# 不需要设置 OPENAI_BASE_URL
+# settings.yaml 中 model 填: gpt-4o-mini
+```
+
+**方案 D：Claude（Anthropic 官方）**
+```bash
+export ANTHROPIC_API_KEY="sk-ant-xxx"
+# settings.yaml 中 model 填: claude-haiku-4-5-20251001
+```
+
+**方案 E：Claude（京东云等第三方代理）**
+```bash
+export ANTHROPIC_API_KEY="pk-xxx"
 export ANTHROPIC_BASE_URL="http://your-proxy.example.com/anthropic"
+# settings.yaml 中 model 填代理支持的模型名，如 Claude-Sonnet-4.6
+```
+
+同时在 `config/settings.yaml` 中设置对应的模型名：
+```yaml
+llm:
+  model: deepseek-chat   # 改成对应平台的模型名
+```
+
+Telegram 推送（可选）：
+```bash
+export TELEGRAM_BOT_TOKEN="..."
+export TELEGRAM_CHAT_ID="..."
 ```
 
 ### 3. 运行一次
