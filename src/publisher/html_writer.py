@@ -244,6 +244,24 @@ def write_weekly_html(
         f.write(html)
 
     logger.info(f"[html_writer] wrote {total_count} items → {filepath}")
+
+    # 更新根目录 index.html，始终指向最新周报
+    index_path = "index.html"
+    weekly_url = f"weekly/{week_label}.html"
+    index_html = f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="refresh" content="0; url={weekly_url}"/>
+  <title>LLM 前沿技术周报</title>
+</head>
+<body>
+  <p>正在跳转到最新周报… <a href="{weekly_url}">点击这里</a></p>
+</body>
+</html>"""
+    with open(index_path, "w", encoding="utf-8") as f:
+        f.write(index_html)
+
     return filepath
 
 
