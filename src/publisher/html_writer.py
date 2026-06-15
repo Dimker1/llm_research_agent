@@ -164,6 +164,100 @@ footer {
   border-top: 1px solid var(--border); padding: 22px;
   text-align: center; font-size: 12px; color: var(--text-muted);
 }
+
+/* ── Agent synthesis 区域 ── */
+.synth-block { margin-bottom: 36px; }
+.synth-label {
+  display: inline-block;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--primary-light);
+  background: rgba(99,102,241,.12);
+  border: 1px solid rgba(99,102,241,.35);
+  border-radius: 999px;
+  padding: 3px 12px;
+  margin-bottom: 14px;
+}
+.tldr-card {
+  background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(16,185,129,.06));
+  border: 1px solid var(--primary);
+  border-radius: 14px;
+  padding: 22px 24px;
+  font-size: 15px; line-height: 1.85;
+  color: var(--text-bright);
+}
+.toppick-list { display: grid; gap: 12px; }
+.toppick-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid #f59e0b;
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.toppick-rank {
+  display: inline-block;
+  background: #f59e0b; color: #1a1a1a;
+  font-weight: 800; font-size: 11px;
+  padding: 2px 8px; border-radius: 4px;
+  margin-right: 8px;
+}
+.toppick-title {
+  font-weight: 700; color: var(--text-bright); font-size: 15px;
+  margin-bottom: 6px;
+}
+.toppick-title a { color: var(--text-bright); }
+.toppick-why { color: var(--text-muted); font-size: 13px; line-height: 1.7; }
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+.theme-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 18px;
+}
+.theme-name {
+  font-size: 14px; font-weight: 700; color: var(--text-bright);
+  margin-bottom: 6px;
+}
+.theme-summary { color: var(--text-muted); font-size: 13px; margin-bottom: 8px; line-height: 1.65; }
+.theme-count { font-size: 11px; color: var(--primary-light); }
+
+.diff-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+@media (max-width: 720px) { .diff-grid { grid-template-columns: 1fr; } }
+.diff-col {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px;
+}
+.diff-col h4 {
+  font-size: 13px; font-weight: 700;
+  margin-bottom: 10px; color: var(--text-bright);
+  letter-spacing: .04em;
+}
+.diff-col.continued h4::before { content: '↻ '; color: var(--primary-light); }
+.diff-col.new h4::before { content: '✦ '; color: #6ee7b7; }
+.diff-col ul { list-style: none; }
+.diff-col li {
+  font-size: 13px; line-height: 1.7;
+  padding: 6px 0; border-bottom: 1px dashed rgba(148,163,184,.15);
+  color: var(--text-muted);
+}
+.diff-col li:last-child { border-bottom: none; }
+.diff-col li strong { color: var(--text-bright); }
+
+.learned-kw-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.learned-kw {
+  font-size: 12px;
+  background: rgba(16,185,129,.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(16,185,129,.3);
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: 'SF Mono', Consolas, monospace;
+}
 """
 
 
@@ -174,8 +268,19 @@ def write_weekly_html(
     output_dir: str = "weekly",
     source_stats: dict = None,
     elapsed_seconds: float = 0.0,
+    synthesis: dict | None = None,
 ) -> str:
-    """生成周报 HTML 文件，返回文件路径。"""
+    """生成周报 HTML 文件，返回文件路径。
+
+    synthesis 可选，结构：
+      {
+        "tldr": str,
+        "top_picks": [{"id","title","url","why"}],
+        "themes": [{"name","summary","item_ids":[...]}],
+        "weekly_diff": {"continued":[{"theme","note"}], "new":[{"theme","note"}]},
+        "learned_kws": [str, ...],
+      }
+    """
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     filepath = str(Path(output_dir) / f"{week_label}.html")
 
@@ -195,6 +300,9 @@ def write_weekly_html(
             f"<strong>{k}</strong>({v})" for k, v in source_stats.items()
         )
         source_html = f'<p class="hero-sub">来源：{parts}</p>'
+
+    # ── Agent synthesis 块（可选） ──
+    synth_html = _render_synthesis_block(synthesis or {}, items)
 
     # ── 统计卡片 ──
     stats_cards = _stats_cards(groups, total_count)
@@ -228,6 +336,7 @@ def write_weekly_html(
 </div>
 
 <div class="container content">
+  {synth_html}
   {stats_cards}
   {sections_html}
 </div>
@@ -409,3 +518,87 @@ def _esc(s: str) -> str:
             .replace("<", "&lt;")
             .replace(">", "&gt;")
             .replace('"', "&quot;"))
+
+
+def _render_synthesis_block(synthesis: dict, items: list[AnalyzedItem]) -> str:
+    if not synthesis:
+        return ""
+
+    parts = []
+
+    tldr = synthesis.get("tldr", "")
+    if tldr:
+        parts.append(f"""
+<div class="synth-block">
+  <div class="synth-label">⚡ 本周 TL;DR</div>
+  <div class="tldr-card">{_esc(tldr)}</div>
+</div>""")
+
+    top_picks = synthesis.get("top_picks", [])
+    if top_picks:
+        picks_html = ""
+        for i, pick in enumerate(top_picks, 1):
+            title = _esc(pick.get("title", ""))
+            url = _esc(pick.get("url", "#"))
+            why = _esc(pick.get("why", ""))
+            picks_html += f"""
+  <div class="toppick-card">
+    <div class="toppick-title"><span class="toppick-rank">#{i}</span><a href="{url}" target="_blank" rel="noopener">{title}</a></div>
+    <div class="toppick-why">{why}</div>
+  </div>"""
+        parts.append(f"""
+<div class="synth-block">
+  <div class="synth-label">🏆 编辑精选</div>
+  <div class="toppick-list">{picks_html}</div>
+</div>""")
+
+    themes = synthesis.get("themes", [])
+    if themes:
+        themes_html = ""
+        for theme in themes:
+            name = _esc(theme.get("name", ""))
+            summary = _esc(theme.get("summary", ""))
+            count = len(theme.get("item_ids", []))
+            themes_html += f"""
+  <div class="theme-card">
+    <div class="theme-name">{name}</div>
+    <div class="theme-summary">{summary}</div>
+    <div class="theme-count">{count} 篇相关</div>
+  </div>"""
+        parts.append(f"""
+<div class="synth-block">
+  <div class="synth-label">🔍 本周热门主题</div>
+  <div class="theme-grid">{themes_html}</div>
+</div>""")
+
+    weekly_diff = synthesis.get("weekly_diff", {})
+    continued = weekly_diff.get("continued", [])
+    new_topics = weekly_diff.get("new", [])
+    if continued or new_topics:
+        cont_items = "".join(
+            f'<li><strong>{_esc(t.get("theme",""))}</strong>　{_esc(t.get("note",""))}</li>'
+            for t in continued
+        )
+        new_items = "".join(
+            f'<li><strong>{_esc(t.get("theme",""))}</strong>　{_esc(t.get("note",""))}</li>'
+            for t in new_topics
+        )
+        parts.append(f"""
+<div class="synth-block">
+  <div class="synth-label">📅 周间动态</div>
+  <div class="diff-grid">
+    <div class="diff-col continued"><h4>持续热点</h4><ul>{cont_items}</ul></div>
+    <div class="diff-col new"><h4>新兴方向</h4><ul>{new_items}</ul></div>
+  </div>
+</div>""")
+
+    learned_kws = synthesis.get("learned_kws", [])
+    if learned_kws:
+        kws_html = "".join(f'<span class="learned-kw">{_esc(k)}</span>' for k in learned_kws)
+        parts.append(f"""
+<div class="synth-block">
+  <div class="synth-label">🧠 本周新关键词</div>
+  <div class="learned-kw-list">{kws_html}</div>
+</div>""")
+
+    return "\n".join(parts)
