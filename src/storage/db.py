@@ -39,6 +39,15 @@ CREATE TABLE IF NOT EXISTS digests (
     created_at  TEXT DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS weekly_memory (
+    week_label   TEXT PRIMARY KEY,           -- 形如 2026-W23
+    tldr         TEXT,                       -- 本周一段话总结
+    top_picks    TEXT,                       -- JSON: [{"id","title","why"}, ...] 编辑精选
+    themes       TEXT,                       -- JSON: [{"name","summary","item_ids":[...]}, ...]
+    learned_kws  TEXT,                       -- JSON: ["kw1","kw2",...] 本周新学到的关键词
+    created_at   TEXT DEFAULT (datetime('now'))
+);
+
 CREATE INDEX IF NOT EXISTS idx_items_published ON items(published);
 CREATE INDEX IF NOT EXISTS idx_items_source    ON items(source);
 CREATE INDEX IF NOT EXISTS idx_analyses_dir    ON analyses(direction);
@@ -61,6 +70,8 @@ class Database:
         Path(db_path).parent.mkdir(parents=True, exist_ok=True)
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
         self.conn.row_factory = sqlite3.Row
+        # WAL 模式：允许并发读写，避免 ThreadPoolExecutor 写入时 database is locked
+        self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.executescript(DDL)
         self.conn.commit()
 
@@ -123,17 +134,20 @@ class Database:
     def get_analyzed_items_range(
         self, start_date: str, end_date: str, min_score: int = 5
     ) -> list[AnalyzedItem]:
-        """查询日期区间 [start_date, end_date] 内的已分析条目，按方向+分数排序"""
+        """查询日期区间 [start_date, end_date] 内的已分析条目，按方向+分数排序。
+
+        统一按 published 日期过滤，保证结果只包含目标周期内发布的内容。
+        arXiv 跨天问题通过 lookback_hours 加缓冲（main.py 中 +2天）解决，不在查询层放宽。
+        """
         cur = self.conn.execute(
             """SELECT i.*, a.relevance_score, a.direction, a.summary_zh, a.keywords, a.reason
                FROM items i
                JOIN analyses a ON i.id = a.item_id
-               WHERE (DATE(a.analyzed_at) BETWEEN ? AND ?
-                      OR DATE(i.published) BETWEEN ? AND ?)
+               WHERE DATE(i.published) BETWEEN ? AND ?
                  AND a.relevance_score >= ?
                  AND a.direction != 'other'
                ORDER BY a.direction, a.relevance_score DESC""",
-            (start_date, end_date, start_date, end_date, min_score),
+            (start_date, end_date, min_score),
         )
         rows = cur.fetchall()
         results = []
@@ -163,6 +177,64 @@ class Database:
             (date, filepath, item_count),
         )
         self.conn.commit()
+
+    # ── weekly memory（Agent synthese 层） ──
+    def save_weekly_memory(
+        self,
+        week_label: str,
+        tldr: str,
+        top_picks: list[dict],
+        themes: list[dict],
+        learned_kws: list[str],
+    ) -> None:
+        self.conn.execute(
+            """INSERT OR REPLACE INTO weekly_memory
+               (week_label, tldr, top_picks, themes, learned_kws)
+               VALUES (?, ?, ?, ?, ?)""",
+            (
+                week_label,
+                tldr,
+                json.dumps(top_picks, ensure_ascii=False),
+                json.dumps(themes, ensure_ascii=False),
+                json.dumps(learned_kws, ensure_ascii=False),
+            ),
+        )
+        self.conn.commit()
+
+    def get_weekly_memory(self, week_label: str) -> dict | None:
+        cur = self.conn.execute(
+            "SELECT * FROM weekly_memory WHERE week_label = ?", (week_label,)
+        )
+        row = cur.fetchone()
+        if not row:
+            return None
+        return {
+            "week_label": row["week_label"],
+            "tldr": row["tldr"] or "",
+            "top_picks": json.loads(row["top_picks"] or "[]"),
+            "themes": json.loads(row["themes"] or "[]"),
+            "learned_kws": json.loads(row["learned_kws"] or "[]"),
+        }
+
+    def get_previous_weekly_memory(self, current_week_label: str) -> dict | None:
+        """返回 week_label < current_week_label 的最近一周记忆。"""
+        cur = self.conn.execute(
+            """SELECT * FROM weekly_memory
+               WHERE week_label < ?
+               ORDER BY week_label DESC
+               LIMIT 1""",
+            (current_week_label,),
+        )
+        row = cur.fetchone()
+        if not row:
+            return None
+        return {
+            "week_label": row["week_label"],
+            "tldr": row["tldr"] or "",
+            "top_picks": json.loads(row["top_picks"] or "[]"),
+            "themes": json.loads(row["themes"] or "[]"),
+            "learned_kws": json.loads(row["learned_kws"] or "[]"),
+        }
 
     def close(self) -> None:
         self.conn.close()

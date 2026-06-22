@@ -17,10 +17,12 @@ from datetime import date as Date, timedelta
 import yaml
 
 from src.fetcher.arxiv_fetcher import ArxivFetcher
+from src.fetcher.hf_papers_fetcher import HFDailyPapersFetcher
 from src.fetcher.rss_fetcher import RSSFetcher
 from src.processor.dedup import dedup
 from src.processor.keyword_filter import KeywordFilter
 from src.processor.llm_analyzer import LLMAnalyzer
+from src.agent.synthesizer import Synthesizer
 from src.publisher.html_writer import write_weekly_html
 from src.publisher.telegram_sender import send_daily_digest
 from src.storage.db import Database
@@ -51,8 +53,15 @@ def build_fetchers(sources_cfg: dict, lookback_hours: int = None) -> list:
         fetchers.append(ArxivFetcher(
             categories=ax.get("categories", ["cs.CL", "cs.AI", "cs.LG"]),
             max_results=ax.get("max_results", 500),
-            # 周报：默认回溯 8 天（7天 + 1天缓冲）
             lookback_hours=lookback_hours or ax.get("lookback_hours", 192),
+        ))
+
+    hf = sources_cfg.get("hf_daily_papers", {})
+    if hf.get("enabled", False):
+        lookback_days = (lookback_hours or 192) // 24
+        fetchers.append(HFDailyPapersFetcher(
+            lookback_days=hf.get("lookback_days", lookback_days),
+            min_upvotes=hf.get("min_upvotes", 0),
         ))
 
     for src in sources_cfg.get("rss", []):
@@ -153,8 +162,7 @@ def run_weekly(
         original_count = len(candidates)
 
         def _score(item):
-            text = f"{item.title} {item.abstract}"
-            return sum(1 for p in kw_filter._dir_patterns.values() if p.search(text))
+            return kw_filter.score(item)
 
         # 非 arXiv：每个来源按关键词命中数取 top rss_quota
         from collections import defaultdict
@@ -186,7 +194,7 @@ def run_weekly(
         db.close()
         return ""
 
-    # ── Step 4: 存储原始条目 ──
+    # ── Step 4: 存储原始条目（在 LLM 分析前入库，防止中途崩溃丢失）──
     for item in new_items:
         db.insert_item(item)
 
@@ -241,7 +249,39 @@ def run_weekly(
 
     elapsed = time.time() - start_time
 
-    # ── Step 8: 生成周报 HTML ──
+    # ── Step 8: Agent 合成（TL;DR / 主题聚类 / 精选 / 周间对比 / 关键词学习）──
+    synth_cfg = cfg.get("synthesizer", {})
+    synthesis: dict = {}
+    if synth_cfg.get("enabled", True) and final_items:
+        try:
+            synthesizer = Synthesizer(
+                analyzer=analyzer,
+                max_items_for_synth=synth_cfg.get("max_items", 60),
+                max_tokens_long=synth_cfg.get("max_tokens_long", 2048),
+            )
+            prev_memory = db.get_previous_weekly_memory(label)
+            existing_kws: set[str] = set()
+            for _langs in kw_filter.directions.values():
+                existing_kws.update(w.lower() for w in _langs.get("en", []))
+                existing_kws.update(w.lower() for w in _langs.get("zh", []))
+            synthesis = synthesizer.synthesize(
+                items=final_items,
+                week_label=label,
+                prev_memory=prev_memory,
+                existing_keywords=existing_kws,
+                learned_path=synth_cfg.get("learned_path", "config/keywords_learned.yaml"),
+            )
+            db.save_weekly_memory(
+                week_label=label,
+                tldr=synthesis.get("tldr", ""),
+                top_picks=synthesis.get("top_picks", []),
+                themes=synthesis.get("themes", []),
+                learned_kws=synthesis.get("learned_kws", []),
+            )
+        except Exception as e:
+            logger.error(f"[main] synthesizer failed, skipping: {e}")
+
+    # ── Step 9: 生成周报 HTML ──
     md_path = write_weekly_html(
         items=final_items,
         week_label=label,
@@ -249,13 +289,14 @@ def run_weekly(
         output_dir=weekly_dir,
         source_stats=source_stats,
         elapsed_seconds=elapsed,
+        synthesis=synthesis,
     )
 
-    # ── Step 9: 记录元数据 ──
+    # ── Step 10: 记录元数据 ──
     db.record_digest(label, md_path, len(final_items))
     db.close()
 
-    # ── Step 10: Telegram 推送 ──
+    # ── Step 11: Telegram 推送 ──
     if not no_telegram:
         with open(md_path, encoding="utf-8") as f:
             content = f.read()

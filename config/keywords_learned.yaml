@@ -1,0 +1,79 @@
+# 自动学习的前沿关键词（由 synthesizer 维护）
+# 不要手动编辑
+
+keywords:
+- agentic engineering
+- cross-agent learning signals
+- cross-domain generalization via reinforcement learning
+- delegation intelligence
+- eval-awareness
+- eval-awareness emergence
+- fp4 pretraining
+- information folding
+- long-lifecycle agent
+- multi-agent swarm
+- multi-turn red-teaming
+- on-policy distillation
+- policy entropy collapse
+- position-aware entropy calibration
+- query recycling
+- rollout budget allocation
+- semantic neighbor mixing
+- span-level reward modeling
+- state-score supervised policy optimization
+- synthetic document finetuning
+- token-level advantage reweighting
+- tool-mediated control flow hijacking
+- trace tournament
+- turn-trajectory policy optimization
+- value-implicit policy optimization
+- zero-variance query recycling
+history:
+- date: '2026-06-15'
+  keywords:
+  - delegation intelligence
+  - zero-variance query recycling
+  - turn-trajectory policy optimization
+  - information folding
+  - span-level reward modeling
+  - eval-awareness emergence
+  - position-aware entropy calibration
+  - on-policy distillation
+  - rollout budget allocation
+  - tool-mediated control flow hijacking
+- date: '2026-06-15'
+  keywords:
+  - delegation intelligence
+  - query recycling
+  - rollout budget allocation
+  - information folding
+  - on-policy distillation
+  - eval-awareness
+  - semantic neighbor mixing
+  - trace tournament
+  - cross-agent learning signals
+  - span-level reward modeling
+- date: '2026-06-15'
+  keywords:
+  - delegation intelligence
+  - query recycling
+  - information folding
+  - rollout budget allocation
+  - semantic neighbor mixing
+  - on-policy distillation
+  - eval-awareness emergence
+  - trace tournament
+  - state-score supervised policy optimization
+  - cross-agent learning signals
+- date: '2026-06-22'
+  keywords:
+  - agentic engineering
+  - multi-agent swarm
+  - long-lifecycle agent
+  - cross-domain generalization via reinforcement learning
+  - token-level advantage reweighting
+  - policy entropy collapse
+  - value-implicit policy optimization
+  - synthetic document finetuning
+  - multi-turn red-teaming
+  - fp4 pretraining

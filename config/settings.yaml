@@ -47,3 +47,9 @@ scheduler:
   hour: 9
   minute: 0
   timezone: Asia/Shanghai
+
+synthesizer:
+  enabled: true
+  max_items: 60           # 送入 synthesizer 的最大条目数
+  max_tokens_long: 2048   # 合成类调用的 max_tokens（比分析更长）
+  learned_path: config/keywords_learned.yaml

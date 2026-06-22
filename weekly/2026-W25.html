@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LLM 周报 | 2026-W25</title>
+  <style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface2: #273349;
+  --border: #334155;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-bright: #f8fafc;
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --code-bg: #0d1117;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+a { color: var(--primary-light); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 45%, #042f2e 100%);
+  padding: 56px 24px 44px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99,102,241,.18), transparent);
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(99,102,241,.2);
+  border: 1px solid var(--primary);
+  color: var(--primary-light);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 14px; border-radius: 999px;
+  margin-bottom: 18px;
+  position: relative;
+}
+.hero h1 {
+  font-size: clamp(22px, 4vw, 38px);
+  font-weight: 800; color: var(--text-bright);
+  line-height: 1.2; margin-bottom: 10px;
+  position: relative;
+}
+.hero h1 span { color: var(--primary-light); }
+.hero-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; position: relative; }
+.hero-meta {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;
+  font-size: 13px; color: var(--text-muted); position: relative;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+/* LAYOUT */
+.container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+.content { padding: 44px 0 72px; }
+
+/* STATS */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px; margin-bottom: 40px;
+}
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; text-align: center;
+}
+.stat-value { font-size: 30px; font-weight: 800; color: var(--primary-light); line-height: 1; margin-bottom: 6px; }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .07em; }
+
+/* SECTION */
+.section { margin-bottom: 48px; }
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; padding-bottom: 12px;
+  border-bottom: 2px solid;
+}
+.section-header.pretraining { border-color: #6366f1; }
+.section-header.post_training { border-color: #10b981; }
+.section-header.agent { border-color: #f59e0b; }
+.section-icon { font-size: 22px; }
+.section-title { font-size: 18px; font-weight: 700; color: var(--text-bright); }
+.section-count {
+  margin-left: auto; font-size: 12px; font-weight: 600;
+  padding: 2px 10px; border-radius: 999px;
+  background: rgba(99,102,241,.15); color: var(--primary-light);
+}
+.section-header.post_training .section-count { background: rgba(16,185,129,.15); color: #6ee7b7; }
+.section-header.agent .section-count { background: rgba(245,158,11,.15); color: #fcd34d; }
+
+/* ITEM CARD */
+.item-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; margin-bottom: 14px;
+  transition: border-color .2s;
+}
+.item-card:hover { border-color: var(--primary); }
+.item-title {
+  font-size: 15px; font-weight: 700; color: var(--text-bright);
+  margin-bottom: 10px; line-height: 1.4;
+}
+.item-title a { color: var(--text-bright); }
+.item-title a:hover { color: var(--primary-light); text-decoration: none; }
+.item-meta {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  margin-bottom: 12px; font-size: 12px; color: var(--text-muted);
+}
+.meta-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(148,163,184,.1); border-radius: 6px;
+  padding: 3px 8px; white-space: nowrap;
+}
+.meta-badge strong { color: var(--text-bright); }
+.score-badge {
+  background: rgba(99,102,241,.2); color: #a5b4fc;
+  border-radius: 6px; padding: 3px 8px; font-weight: 700;
+}
+.score-9, .score-10 { background: rgba(16,185,129,.2); color: #6ee7b7; }
+.score-7, .score-8 { background: rgba(99,102,241,.2); color: #a5b4fc; }
+.score-5, .score-6 { background: rgba(245,158,11,.15); color: #fcd34d; }
+.keywords { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.kw {
+  font-size: 11px; font-family: 'SF Mono', Consolas, monospace;
+  background: rgba(99,102,241,.15); color: #c4b5fd;
+  border-radius: 4px; padding: 2px 7px;
+}
+.summary {
+  font-size: 13px; color: var(--text-muted); line-height: 1.7;
+  border-left: 3px solid var(--border);
+  padding-left: 12px; margin-top: 8px;
+}
+.empty-section {
+  color: var(--text-muted); font-size: 14px; font-style: italic;
+  padding: 16px 0;
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border); padding: 22px;
+  text-align: center; font-size: 12px; color: var(--text-muted);
+}
+
+/* ── Agent synthesis 区域 ── */
+.synth-block { margin-bottom: 36px; }
+.synth-label {
+  display: inline-block;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--primary-light);
+  background: rgba(99,102,241,.12);
+  border: 1px solid rgba(99,102,241,.35);
+  border-radius: 999px;
+  padding: 3px 12px;
+  margin-bottom: 14px;
+}
+.tldr-card {
+  background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(16,185,129,.06));
+  border: 1px solid var(--primary);
+  border-radius: 14px;
+  padding: 22px 24px;
+  font-size: 15px; line-height: 1.85;
+  color: var(--text-bright);
+}
+.toppick-list { display: grid; gap: 12px; }
+.toppick-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid #f59e0b;
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.toppick-rank {
+  display: inline-block;
+  background: #f59e0b; color: #1a1a1a;
+  font-weight: 800; font-size: 11px;
+  padding: 2px 8px; border-radius: 4px;
+  margin-right: 8px;
+}
+.toppick-title {
+  font-weight: 700; color: var(--text-bright); font-size: 15px;
+  margin-bottom: 6px;
+}
+.toppick-title a { color: var(--text-bright); }
+.toppick-why { color: var(--text-muted); font-size: 13px; line-height: 1.7; }
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+.theme-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 18px;
+}
+.theme-name {
+  font-size: 14px; font-weight: 700; color: var(--text-bright);
+  margin-bottom: 6px;
+}
+.theme-summary { color: var(--text-muted); font-size: 13px; margin-bottom: 8px; line-height: 1.65; }
+.theme-count { font-size: 11px; color: var(--primary-light); }
+
+.diff-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+@media (max-width: 720px) { .diff-grid { grid-template-columns: 1fr; } }
+.diff-col {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px;
+}
+.diff-col h4 {
+  font-size: 13px; font-weight: 700;
+  margin-bottom: 10px; color: var(--text-bright);
+  letter-spacing: .04em;
+}
+.diff-col.continued h4::before { content: '↻ '; color: var(--primary-light); }
+.diff-col.new h4::before { content: '✦ '; color: #6ee7b7; }
+.diff-col ul { list-style: none; }
+.diff-col li {
+  font-size: 13px; line-height: 1.7;
+  padding: 6px 0; border-bottom: 1px dashed rgba(148,163,184,.15);
+  color: var(--text-muted);
+}
+.diff-col li:last-child { border-bottom: none; }
+.diff-col li strong { color: var(--text-bright); }
+
+.learned-kw-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.learned-kw {
+  font-size: 12px;
+  background: rgba(16,185,129,.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(16,185,129,.3);
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: 'SF Mono', Consolas, monospace;
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">LLM 前沿技术周报</div>
+  <h1>📚 <span>2026-W25</span> 周报</h1>
+  <p class="hero-sub">覆盖时间：2026-06-15 → 2026-06-21</p>
+  <p class="hero-sub">来源：<strong>arxiv</strong>(1492) &nbsp;|&nbsp; <strong>HFDailyPapers</strong>(193) &nbsp;|&nbsp; <strong>量子位</strong>(10) &nbsp;|&nbsp; <strong>雷峰网</strong>(20) &nbsp;|&nbsp; <strong>宝玉博客</strong>(30) &nbsp;|&nbsp; <strong>AheadOfAI</strong>(20) &nbsp;|&nbsp; <strong>ImportAI</strong>(20) &nbsp;|&nbsp; <strong>Interconnects</strong>(20) &nbsp;|&nbsp; <strong>TheGradient</strong>(15) &nbsp;|&nbsp; <strong>LastWeekInAI</strong>(20) &nbsp;|&nbsp; <strong>ChipHuyen</strong>(10) &nbsp;|&nbsp; <strong>EugeneYan</strong>(30) &nbsp;|&nbsp; <strong>SimonWillison</strong>(30) &nbsp;|&nbsp; <strong>AISnakeOil</strong>(0) &nbsp;|&nbsp; <strong>MLEngineer</strong>(20) &nbsp;|&nbsp; <strong>LiLianWeng</strong>(30) &nbsp;|&nbsp; <strong>InFERENCe</strong>(15) &nbsp;|&nbsp; <strong>OneUsefulThing</strong>(20) &nbsp;|&nbsp; <strong>LangChainBlog</strong>(30) &nbsp;|&nbsp; <strong>EleutherAI</strong>(30) &nbsp;|&nbsp; <strong>HuggingFaceBlog</strong>(30) &nbsp;|&nbsp; <strong>OpenAIBlog</strong>(30) &nbsp;|&nbsp; <strong>DeepMindBlog</strong>(30) &nbsp;|&nbsp; <strong>GoogleResearch</strong>(25) &nbsp;|&nbsp; <strong>MicrosoftResearch</strong>(10) &nbsp;|&nbsp; <strong>AlignmentForum</strong>(10) &nbsp;|&nbsp; <strong>Reddit_ML</strong>(25) &nbsp;|&nbsp; <strong>Reddit_LocalLLaMA</strong>(0) &nbsp;|&nbsp; <strong>TechCrunchAI</strong>(20)</p>
+  <div class="hero-meta">
+    <span>📄 精选 37 条内容</span>
+    <span>🏗️ 预训练 7 条</span>
+    <span>🎯 后训练 15 条</span>
+    <span>🤖 Agent 15 条</span>
+  </div>
+</div>
+
+<div class="container content">
+  
+<div class="synth-block">
+  <div class="synth-label">⚡ 本周 TL;DR</div>
+  <div class="tldr-card">本周LLM研究圈呈现出三条清晰的主线。其一，多智能体系统的工程化与评测成为最密集的议题，从软件工程自动化、深度研究Agent、运筹学任务求解，到安全红队测试与记忆系统设计，Agent研究已全面进入落地验证阶段，但当前最优模型在复杂端到端任务上的通过率仍普遍偏低，能力天花板清晰可见。其二，强化学习后训练的精细化调优持续升温，围绕GRPO范式的改进百花齐放——熵崩溃控制、token级优势重加权、价值隐式策略优化等方向密集涌现，研究者正从粗粒度奖励设计转向对训练动态的精细干预。其三，安全与对齐研究呈现出多层次推进的态势，涵盖预训练阶段的安全反思注入、合成文档微调以灌输正向特质、部署前模拟评估以及隐式用户反馈对齐，表明社区正尝试将安全能力前置到训练全流程而非仅依赖事后RLHF。此外，GLM-5.2以753B参数百万上下文的开源发布，以及边缘设备LoRA峰值内存降低逾26倍的工程突破，共同折射出本周在模型规模与推理效率两端同步施力的整体格局。</div>
+</div>
+
+<div class="synth-block">
+  <div class="synth-label">🏆 编辑精选</div>
+  <div class="toppick-list">
+  <div class="toppick-card">
+    <div class="toppick-title"><span class="toppick-rank">#1</span><a href="http://arxiv.org/abs/2606.20002v1" target="_blank" rel="noopener">Connect the Dots: Training LLMs for Long-Lifecycle Agents with Cross-Domain Generalization Via Reinforcement Learning</a></div>
+    <div class="toppick-why">提出CoD框架解决长生命周期Agent的元能力训练问题，这是当前Agent研究中少有人系统攻克的方向。端到端RL设计含细粒度信用分配，并在跨域泛化和Ralph循环设置上均有实验验证，贡献超出单一任务优化的范畴，具有较强的方法论原创性。</div>
+  </div>
+  <div class="toppick-card">
+    <div class="toppick-title"><span class="toppick-rank">#2</span><a href="http://arxiv.org/abs/2606.19236v1" target="_blank" rel="noopener">STARE: Surprisal-Guided Token-Level Advantage Reweighting for Policy Entropy Stability</a></div>
+    <div class="toppick-why">针对GRPO等主流RLVR算法的熵崩溃/熵爆炸问题给出了有理论支撑的token级解法，通过优势-惊异度四象限结构和一阶梯度分析识别关键分支点，方法清晰且在1.5B到32B多规模、三类任务上均有验证，在AIME24/25上超越DAPO等基线4%-8%，工程可复现价值高。</div>
+  </div>
+  <div class="toppick-card">
+    <div class="toppick-title"><span class="toppick-rank">#3</span><a href="http://arxiv.org/abs/2606.20381v1" target="_blank" rel="noopener">Rethinking Shrinkage Bias in LLM FP4 Pretraining: Geometric Origin, Systemic Impact, and UFP4 Recipe</a></div>
+    <div class="toppick-why">从几何角度揭示FP4 E2M1格式收缩偏差的根本来源，并指出随机Hadamard变换会进一步加剧偏差——这对当前业界推进FP4预训练的工作有直接的纠偏意义。提出的UFP4方案在124B MoE长程预训练中持续优于E2M1基线，对下一代加速器设计也有明确的硬件建议，是预训练方向少见的精确工程洞察。</div>
+  </div></div>
+</div>
+
+<div class="synth-block">
+  <div class="synth-label">🔍 本周热门主题</div>
+  <div class="theme-grid">
+  <div class="theme-card">
+    <div class="theme-name">多智能体系统与框架</div>
+    <div class="theme-summary">本周多项工作探索多智能体协作架构，涵盖软件工程自动化、深度研究、编译器优化、博弈论决策等场景，LangGraph等框架被用于构建类工程团队的Agent群体，性能显著提升。</div>
+    <div class="theme-count">5 篇相关</div>
+  </div>
+  <div class="theme-card">
+    <div class="theme-name">Agent评测与安全</div>
+    <div class="theme-summary">本周多项工作聚焦Agent能力评测与安全性，包括开源模型工具调用基准、多轮红队测试基准NRT-Bench、信息泄露风险评估以及运筹学任务端到端评测，揭示当前Agent在安全与能力上的明显短板。</div>
+    <div class="theme-count">5 篇相关</div>
+  </div>
+  <div class="theme-card">
+    <div class="theme-name">Agent记忆与知识管理</div>
+    <div class="theme-summary">本周研究关注LLM Agent的记忆与知识冲突问题，AtomMem提出基于原子事实的层次化长期记忆系统，MACR框架通过多智能体归纳推理显式解决参数知识与上下文知识冲突，以及Agent主动澄清不确定性的方法。</div>
+    <div class="theme-count">4 篇相关</div>
+  </div>
+  <div class="theme-card">
+    <div class="theme-name">RL后训练与策略优化</div>
+    <div class="theme-summary">本周多篇论文针对GRPO等强化学习后训练算法的熵崩溃、token级更新和价值估计问题提出改进，VIMPO、ICT、STARE等方法在数学推理基准上均超越现有基线，同时CoD框架探索长生命周期Agent的跨域泛化训练。</div>
+    <div class="theme-count">5 篇相关</div>
+  </div>
+  <div class="theme-card">
+    <div class="theme-name">模型对齐与安全训练</div>
+    <div class="theme-summary">本周工作从合成文档微调、预训练阶段安全反思、隐式用户反馈对齐等多角度推进模型对齐，并提出预部署安全模拟评估方法，涌现对齐机制通过内省步骤无需外部评判模型即可减少非伦理输出。</div>
+    <div class="theme-count">5 篇相关</div>
+  </div>
+  <div class="theme-card">
+    <div class="theme-name">微调效率与参数高效方法</div>
+    <div class="theme-summary">本周关注LoRA替代方案与边缘设备微调效率，探讨超越LoRA的参数高效微调技术，并提出量化、激活检查点、softmax近似等组合技术将边缘设备峰值内存降低26-28倍。</div>
+    <div class="theme-count">3 篇相关</div>
+  </div>
+  <div class="theme-card">
+    <div class="theme-name">大模型预训练与推理优化</div>
+    <div class="theme-summary">本周GLM-5.2以753B MoE架构成为最强开源纯文本模型，同时FP4预训练收缩偏差分析、KV缓存极致压缩、MoE校准以及大规模推理开放手册等工作全面推进预训练与部署效率前沿。</div>
+    <div class="theme-count">5 篇相关</div>
+  </div></div>
+</div>
+
+<div class="synth-block">
+  <div class="synth-label">📅 周间动态</div>
+  <div class="diff-grid">
+    <div class="diff-col continued"><h4>持续热点</h4><ul><li><strong>多智能体系统与框架</strong>　延续上周多智能体协作框架设计方向，本周进一步拓展至软件工程自动化、编译器优化、博弈论决策等更多垂直场景，并引入LangGraph等工程化框架落地。</li><li><strong>Agent评测与安全</strong>　延续上周对智能体安全威胁与评估可靠性的关注，本周新增工具调用基准、多轮红队测试及信息泄露风险等更系统化的评测维度。</li><li><strong>RL后训练与策略优化</strong>　延续上周推理训练与强化学习后训练优化方向，本周聚焦GRPO熵崩溃、token级更新等具体算法缺陷并提出VIMPO、ICT、STARE等针对性改进。</li><li><strong>模型对齐与安全训练</strong>　延续上周RLHF与后训练对齐机制的研究脉络，本周从合成文档微调、预训练阶段安全反思等新角度拓展对齐方法，并引入预部署安全模拟评估。</li></ul></div>
+    <div class="diff-col new"><h4>新兴方向</h4><ul><li><strong>Agent记忆与知识管理</strong>　上周研究未涉及Agent长期记忆结构与参数知识和上下文知识冲突问题，本周首次以该方向为独立主题出现。</li><li><strong>微调效率与参数高效方法</strong>　上周未出现针对LoRA替代方案及边缘设备峰值内存压缩的参数高效微调专项研究，属本周新独立方向。</li><li><strong>大模型预训练与推理优化</strong>　上周关注点集中在训练算法与对齐机制，本周以GLM-5.2发布为代表，将大规模MoE预训练架构、FP4训练、KV缓存极致压缩等底层基础设施优化作为独立主题提出。</li></ul></div>
+  </div>
+</div>
+
+<div class="synth-block">
+  <div class="synth-label">🧠 本周新关键词</div>
+  <div class="learned-kw-list"><span class="learned-kw">agentic engineering</span><span class="learned-kw">multi-agent swarm</span><span class="learned-kw">long-lifecycle agent</span><span class="learned-kw">cross-domain generalization via reinforcement learning</span><span class="learned-kw">token-level advantage reweighting</span><span class="learned-kw">policy entropy collapse</span><span class="learned-kw">value-implicit policy optimization</span><span class="learned-kw">synthetic document finetuning</span><span class="learned-kw">multi-turn red-teaming</span><span class="learned-kw">fp4 pretraining</span></div>
+</div>
+  
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-value">37</div>
+    <div class="stat-label">精选总条目</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#818cf8">7</div>
+    <div class="stat-label">🏗️ 预训练</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#6ee7b7">15</div>
+    <div class="stat-label">🎯 后训练</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:#fcd34d">15</div>
+    <div class="stat-label">🤖 LLM Agent</div>
+  </div>
+</div>
+  
+<div class="section">
+  <div class="section-header pretraining">
+    <span class="section-icon">🏗️</span>
+    <span class="section-title">预训练方向</span>
+    <span class="section-count">7 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20381v1" target="_blank" rel="noopener">Rethinking Shrinkage Bias in LLM FP4 Pretraining: Geometric Origin, Systemic Impact, and UFP4 Recipe</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Qian Zhao, Kunlong Chen, Changxin Tian 等</span>
+  </div>
+  <div class="keywords"><span class="kw">FP4预训练</span><span class="kw">量化</span><span class="kw">收缩偏差</span><span class="kw">MoE</span><span class="kw">扩展律</span></div>
+  <div class="summary">本文针对LLM FP4预训练中E2M1格式存在的收缩偏差问题进行深入分析，揭示该偏差源于非均匀格式的几何不对称性，并在多层传播中累积放大。研究发现随机Hadamard变换会进一步加剧该偏差，为现有E2M1方案的训练不稳定提供了统一解释。提出UFP4均匀4位训练方案，在所有三个训练GEMM中应用RHT并限制随机舍入范围。在1.5B稠密模型和7.9B/124B MoE模型的长程预训练中，UFP4持续优于E2M1基线，建议未来加速器将E1M2/INT4均匀4位格式作为一等训练原语支持。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://simonwillison.net/2026/Jun/17/glm-52/#atom-everything" target="_blank" rel="noopener">GLM-5.2 is probably the most powerful text-only open weights LLM</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;SimonWillison</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-17</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">MoE</span><span class="kw">开源权重</span><span class="kw">上下文长度</span></div>
+  <div class="summary">Z.ai发布了GLM-5.2，一个753B参数的混合专家架构开源大语言模型，采用MIT协议开放权重。该模型上下文窗口扩展至100万token，在Artificial Analysis智能指数排行中位列开源模型第一。GLM-5.2为纯文本输入模型，激活参数约40B，是目前最强的纯文本开源LLM之一。其输出token消耗相对较多，但综合性能领先MiniMax、DeepSeek等竞品。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.reddit.com/r/MachineLearning/comments/1uavduv/an_open_handbook_on_llm_inference_at_scale_gpu/" target="_blank" rel="noopener">An open handbook on LLM inference at scale (GPU internals, KV cache, batching, vLLM/SGLang/TensorRT-LLM) [P]</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;Reddit_ML</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-20</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM推理</span><span class="kw">KV缓存</span><span class="kw">推理效率</span></div>
+  <div class="summary">作者正在撰写一本关于大规模LLM推理的开放手册，涵盖GPU内部机制、KV缓存、批处理等核心主题。最新章节深入讲解GPU执行与内存层次结构，分析推理过程中的性能瓶颈。手册还涉及vLLM、SGLang、TensorRT-LLM等主流推理框架的对比。项目为开源学习性质，欢迎社区反馈和贡献。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.reddit.com/r/LocalLLaMA/comments/1u6bca1/this_is_amazing_token_speed_doubled_kv_cache_now/" target="_blank" rel="noopener">This is amazing. Token speed doubled + kv cache now need low vram - qwen 27b</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;Reddit_LocalLLaMA</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-15</span>
+    <span class="score-badge score-7">7/10</span>
+  </div>
+  <div class="keywords"><span class="kw">KV缓存优化</span><span class="kw">推理效率</span><span class="kw">量化</span></div>
+  <div class="summary">该帖子介绍了一项针对Qwen3.6-27B的KV缓存优化技术，在单张RTX 3090上实现了256K原生上下文，生成速度从约19 tok/s提升至38.6 tok/s，VRAM占用从21GB降至17.5GB。KV缓存残留量仅72 MiB，在6%残差率下针刺测试召回率达88-100%。在HumanEval、GSM、MATH等基准测试上准确率未下降，显示质量损失极小。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20544v1" target="_blank" rel="noopener">Toward Calibrated Mixture-of-Experts Under Distribution Shift</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-7">7/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Gina Wong, Drew Prinster, Suchi Saria 等</span>
+  </div>
+  <div class="keywords"><span class="kw">MoE</span><span class="kw">分布偏移</span><span class="kw">模型校准</span><span class="kw">路由机制</span></div>
+  <div class="summary">本文研究MoE模型在分布偏移下的校准问题，探讨路由机制与专家级校准之间的相互作用。研究表明硬路由模型中专家级校准足以保证整体模型校准，但软路由模型中则不足。为此提出一种对抗性重加权方法，以惩罚分布偏移下路由聚合的校准误差。实验结果显示该方法在多种模型类别、预测任务和分布偏移场景下均改善了精度与校准的权衡。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20089v1" target="_blank" rel="noopener">IHUBERT: Vector-Based Semantic Deduplication and Domain-Balanced Pretraining for Persian Resources</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-7">7/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Arash Ghafouri, Mahdi Firouzmandi, Hossein Saberi 等</span>
+  </div>
+  <div class="keywords"><span class="kw">预训练语言模型</span><span class="kw">语义去重</span><span class="kw">数据预处理</span><span class="kw">波斯语</span><span class="kw">RoBERTa</span></div>
+  <div class="summary">本文提出IHUBERT，一个从零开始训练的波斯语单语预训练语言模型，基于RoBERTa-base架构（1.25亿参数），在45GB精选波斯语语料上训练。研究采用多阶段预处理流水线，包括语义去重和领域均衡控制，以提升语料质量。同时训练了一个13.9万词汇量的BPE分词器以更好捕捉波斯语形态变化。模型在七个波斯语NLU基准测试上进行评估，在抽取式问答任务上取得最佳成绩。研究还对分词器进行了消融实验，验证了BPE相对于WordPiece的优势。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.reddit.com/r/LocalLLaMA/comments/1u6bwcn/lower_generation_speed_with_h100_and_h200_than/" target="_blank" rel="noopener">*Lower* generation speed with H100 and H200 than with RTX 5090?</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;Reddit_LocalLLaMA</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-15</span>
+    <span class="score-badge score-6">6/10</span>
+  </div>
+  <div class="keywords"><span class="kw">推理效率</span><span class="kw">量化</span><span class="kw">GPU性能</span></div>
+  <div class="summary">作者对比了RTX 5090与H100在llama.cpp上运行31B量化模型的生成速度，发现5090约57 tok/s而H100仅约42 tok/s，与预期相反。H100具有更高显存带宽和算力，但生成速度反而更慢。作者对此差异感到困惑，并注意到H100支持更大上下文窗口（128k vs 26k）。该讨论涉及推理效率和硬件性能比较。</div>
+</div>
+</div>
+<div class="section">
+  <div class="section-header post_training">
+    <span class="section-icon">🎯</span>
+    <span class="section-title">后训练方向</span>
+    <span class="section-count">15 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="https://huggingface.co/blog/peft-beyond-lora" target="_blank" rel="noopener">Beyond LoRA: Can you beat the most popular fine-tuning technique?</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;HuggingFaceBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-17</span>
+    <span class="score-badge score-9">9/10</span>
+  </div>
+  <div class="keywords"><span class="kw">LoRA</span><span class="kw">fine-tuning</span><span class="kw">PEFT</span></div>
+  <div class="summary">本文挑战LoRA作为最流行微调技术的主导地位，探讨是否存在更优的替代方案。对比分析了多种参数高效微调方法的性能与效率。为研究人员提供了超越LoRA的潜在微调技术路线。对大模型微调领域的方法选择具有重要指导意义。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.alignmentforum.org/posts/GTYJRLhqztxKF2v5R/synthetic-document-finetuning-for-instilling-positive-traits" target="_blank" rel="noopener">Synthetic document finetuning for instilling positive traits</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;AlignmentForum</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-15</span>
+    <span class="score-badge score-9">9/10</span>
+  </div>
+  <div class="keywords"><span class="kw">SFT</span><span class="kw">合成数据微调</span><span class="kw">对齐</span><span class="kw">模型特质灌输</span><span class="kw">中间训练</span></div>
+  <div class="summary">该研究探讨通过合成文档微调来向语言模型灌输特定特质和价值观。研究团队对Gemini 3 Flash进行中间训练和合成对话数据微调，使其具备目标特质。结果显示对话微调在分布外场景下仍能有效且稳健地传递目标特质。该方法借鉴了模型规格中间训练思路，通过教导模型行为背后的原因而非仅教导行为本身来改善泛化能力。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20008v1" target="_blank" rel="noopener">VIMPO: Value-Implicit Policy Optimization for LLMs</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Zhewei Kang, Aosong Feng, Sergey Levine 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">GRPO</span><span class="kw">偏好优化</span><span class="kw">策略优化</span><span class="kw">信用分配</span></div>
+  <div class="summary">本文提出VIMPO，一种无需训练评论家的LLM策略优化方法，通过KL正则化强化学习的最优性条件推导出策略隐含价值函数。该方法利用策略与参考模型的对数比率及终端条件构建简洁的价值损失，实现结果级可验证奖励的纳入。VIMPO将奖励融合（通过价值损失）与策略改进（通过类PPO演员更新）分离，在多个数学推理基准上超越GRPO，尤其在竞赛级评测中提升更显著。在噪声奖励条件下同样表现稳健。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19771v1" target="_blank" rel="noopener">Beyond Entropy: Learning from Token-Level Distributional Deviations for LLM Reasoning</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Xuanzhi Feng, Zhengyang Li, Zeyu Liu 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLVR</span><span class="kw">GRPO</span><span class="kw">偏好优化</span><span class="kw">强化学习</span><span class="kw">推理训练</span></div>
+  <div class="summary">本文提出了独立组合Token（ICT）框架，用于解决RLVR训练中均匀token更新导致的熵崩溃和熵爆炸问题。ICT通过利用token logit分布之间的Jensen-Shannon散度，识别具有独特分布模式的token作为关键分支点，以引导LLM推理中的有效探索。理论分析证明，选择性更新这些token能够调节策略集中度，同时防止过度集中和盲目探索。在Qwen2.5系列模型上的实验表明，仅更新前10%的独特token即可在七个基准上实现平均4.58%的pass@4提升。该方法在数学、常识和奥林匹克级别问题上均优于GRPO等基线方法。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19528v1" target="_blank" rel="noopener">Techniques for Peak Memory Reduction for LoRA Fine-tuning of LLMs on Edge Devices</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-17</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Hassan Dbouk, Matthias Reisser, Prathamesh Mandke 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LoRA</span><span class="kw">边缘设备微调</span><span class="kw">峰值内存优化</span><span class="kw">量化</span><span class="kw">激活检查点</span></div>
+  <div class="summary">本文针对边缘设备上使用LoRA对LLM进行微调时的峰值内存问题，提出了一套互补技术方案。具体包括基础模型量化与动态反量化、结合选择性激活缓存和磁盘卸载的高效检查点机制、基于语义相关子集的softmax近似以及logits掩码。在Llama-3.2 3B和Qwen-2.5 3B上实验显示峰值内存分别降低26倍和28倍，使资源受限设备上的微调成为可能。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19527v1" target="_blank" rel="noopener">Emergent Alignment</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-17</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Martin Kolář</span>
+  </div>
+  <div class="keywords"><span class="kw">对齐</span><span class="kw">DPO</span><span class="kw">RLHF</span><span class="kw">自我修正</span><span class="kw">伦理</span></div>
+  <div class="summary">本文探讨LLM能否识别自身输出与人类伦理的偏差并进行自我修正，提出了一种包含良知步骤的内省机制。通过将DPO对齐损失融入训练，引导模型远离非伦理输出，无需额外的评判模型，仅依赖模型自身的冻结副本。实验在代码黑客场景下验证了该方法，展示了如何实现涌现对齐，与涌现偏差现象形成对比。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19236v1" target="_blank" rel="noopener">STARE: Surprisal-Guided Token-Level Advantage Reweighting for Policy Entropy Stability</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-17</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Haipeng Luo, Qingfeng Sun, Songli Wu 等</span>
+  </div>
+  <div class="keywords"><span class="kw">GRPO</span><span class="kw">策略熵</span><span class="kw">强化学习后训练</span><span class="kw">token级优势重加权</span><span class="kw">偏好优化</span></div>
+  <div class="summary">STARE针对GRPO等强化学习后训练算法中常见的策略熵崩溃问题，提出基于惊异度引导的token级优势重加权方法。通过对token级熵动态的一阶梯度分析，识别出优势-惊异度四象限结构与近临界性质。方法在1.5B到32B多种模型规模及短CoT、长CoT、多轮工具使用三类任务上验证有效性，在AIME24/25上超越DAPO等基线4%-8%。STARE在保持策略熵稳定的同时，促进反思token与响应长度同步增长，维持持续的探索-利用平衡。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.interconnects.ai/p/frontier-post-training-recipe-review" target="_blank" rel="noopener">Frontier post-training recipe review with Finbarr Timbers</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;Interconnects</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-16</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">post-training</span><span class="kw">前沿配方</span><span class="kw">访谈</span></div>
+  <div class="summary">本文是与Finbarr Timbers的访谈，主题聚焦于前沿大语言模型的后训练方案综述。内容涵盖当前主流的后训练流程与技术路线。Finbarr Timbers是业内知名的后训练研究者，访谈具有较高参考价值。该系列为Interconnects平台的第18期访谈节目。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.alignmentforum.org/posts/xPXJfgqFTvuJxGZbE/predicting-llm-safety-before-release-by-simulating" target="_blank" rel="noopener">Predicting LLM Safety Before Release by Simulating Deployment</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;AlignmentForum</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-16</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">安全对齐</span><span class="kw">部署模拟</span><span class="kw">预部署评估</span></div>
+  <div class="summary">本文介绍了一种在模型发布前模拟真实部署场景的安全评估方法。通过以隐私保护方式重放历史对话来测试候选模型的行为表现。该方法作为预部署安全审查的补充手段，可以在模型上线前预测其潜在风险和不良行为。在GPT-5.4的研究中，该方法的预测与实际部署结果高度吻合。这为LLM的安全对齐和部署前评估提供了新思路。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20482v1" target="_blank" rel="noopener">Your Mouse and Eyes Secretly Leak Your Preference: LLM Alignment using Implicit Feedback from Users</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Haw-Shiuan Chang, Jeffrey Gomez, Mehul Patwari 等</span>
+  </div>
+  <div class="keywords"><span class="kw">RLHF</span><span class="kw">DPO</span><span class="kw">隐式反馈</span><span class="kw">偏好对齐</span><span class="kw">奖励模型</span></div>
+  <div class="summary">本文探讨利用用户隐式反馈（鼠标轨迹和眼动数据）对大语言模型进行对齐的方法。构建了IFLLM数据集，收集了59名众包工人在与LLM交互时的鼠标轨迹和眼动数据。基于隐式反馈的奖励模型将文本奖励模型准确率从55%提升至64%。结合DPO训练后，相对响应质量提升近三倍，验证了隐式反馈在LLM对齐中的价值。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19750v1" target="_blank" rel="noopener">Manifold Bandits: Bayesian Curriculum Learning over the Latent Geometry of Large Language Models</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Darrien McKenzie, Nicklas Hansen, Xiaolong Wang</span>
+  </div>
+  <div class="keywords"><span class="kw">课程学习</span><span class="kw">强化学习</span><span class="kw">RLHF</span><span class="kw">训练策略</span><span class="kw">推理能力</span></div>
+  <div class="summary">本文将LLM强化学习训练中的问题采样问题建模为流形结构的多臂老虎机问题。现有自适应课程学习方法仅关注中等难度问题，忽视了任务空间的结构性和异质性。作者提出贝叶斯流形课程（BMC）框架，将问题组织为层次任务树并应用贝叶斯学习指导采样。实验发现不同采样策略在生产力、多样性和实用性之间存在非平凡权衡，单纯优先考虑难度不足以获得强下游性能。该工作强调了将结构感知和类型感知纳入问题采样的重要性。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19714v1" target="_blank" rel="noopener">AURA: Adaptive Uncertainty-aware Refinement for LLM-as-a-Judge Auditing</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Zilong Zhang, Yi-Ting Hung, Weiyi He 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM-as-a-Judge</span><span class="kw">评测基准</span><span class="kw">偏好优化</span></div>
+  <div class="summary">AURA是一个针对LLM-as-a-Judge评测的自适应不确定性感知精炼框架，旨在解决现有审计流程依赖干净监督信号的脆弱假设问题。该框架通过迭代学习人类一致性信号、传播可靠证据并优先选择不确定比较进行人工审核，将对判断模型的信任视为随证据累积而逐步精炼的潜在量。AURA在合成数据和真实LLM答案数据上均进行了全面评估。其核心贡献在于在有限人工验证条件下提升LLM评判的可靠性。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19168v1" target="_blank" rel="noopener">Beyond Safe Data: Pretraining-Stage Alignment with Regular Safety Reflection</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-17</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Jinhan Li, Kexian Tang, Yihan Xu 等</span>
+  </div>
+  <div class="keywords"><span class="kw">预训练对齐</span><span class="kw">安全性</span><span class="kw">安全反思</span><span class="kw">数据过滤</span><span class="kw">LLM安全</span></div>
+  <div class="summary">该论文提出安全反思预训练方法，通过在预训练语料中定期插入短安全反思片段，将自我监控能力直接整合到语言建模过程中。研究认为预训练阶段对齐不应仅限于数据过滤或改写，因为模型可能将良性知识组合出不安全行为。实验表明该方法显著降低推理阶段和微调攻击的成功率，并优于数据过滤和改写基线。同时引入合成受控环境MedSafetyWorld以严格评估安全泛化能力。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20502v1" target="_blank" rel="noopener">Calibration Without Comprehension: Diagnosing the Limits of Fine-Tuning LLMs for Vulnerability Detection in Systems Software</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-7">7/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Arastoo Zibaeirad, Marco Vieira</span>
+  </div>
+  <div class="keywords"><span class="kw">LoRA微调</span><span class="kw">漏洞检测</span><span class="kw">数据污染</span></div>
+  <div class="summary">本文提出CWE-Trace框架，基于834个手工标注Linux内核样本评估LLM在系统软件漏洞检测中的真实推理能力。研究发现数据污染对模型性能没有可测量的优势，骨干模型的方向性先验主导了微调效果。微调仅改变输出阈值而不改变决策策略，即校准而非理解。最佳检测准确率仅52.1%，证实当前LLM无论采用何种微调策略都缺乏可靠的安全推理能力。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20227v1" target="_blank" rel="noopener">QMFOL: Benchmarking Large Language Model Reasoning via Quantifiable Monadic First-Order Logic Test Case Generation</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-7">7/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Xinyi Zheng, Ling Shi, Tianlong Yu 等</span>
+  </div>
+  <div class="keywords"><span class="kw">评测基准</span><span class="kw">演绎推理</span><span class="kw">逻辑复杂度控制</span></div>
+  <div class="summary">本文提出QMFOL框架，用于自动生成具有可量化复杂度的一阶逻辑推理任务，通过合取和析取模式构建形式逻辑结构，并利用LLM将其转换为自然语言。基于此框架构建了QMFOLBench基准，包含2880个实例和960种配置。实验表明模型在逻辑复杂度上升时性能下降，对真标签任务表现优于假或未知标签任务，且对语义变化敏感。该工作为现代语言模型推理能力的精细化评测提供了可扩展且可靠的方法。</div>
+</div>
+</div>
+<div class="section">
+  <div class="section-header agent">
+    <span class="section-icon">🤖</span>
+    <span class="section-title">LLM Agent 方向</span>
+    <span class="section-count">15 条</span>
+  </div>
+  
+<div class="item-card">
+  <div class="item-title"><a href="https://www.langchain.com/blog/agentic-engineering-redefining-software-engineering" target="_blank" rel="noopener">Agentic Engineering: How Swarms of AI Agents Are Redefining Software Engineering</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;LangChainBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-15</span>
+    <span class="score-badge score-9">9/10</span>
+  </div>
+  <div class="keywords"><span class="kw">多智能体</span><span class="kw">LangGraph</span><span class="kw">软件工程自动化</span></div>
+  <div class="summary">本文探讨了多智能体系统如何重新定义软件工程流程。类比真实工程团队结构的AI Agent群体可将调试时间缩短93%并压缩跨团队交付周期。文章介绍了基于LangGraph构建的多Agent架构设计。这种Agentic工程范式正在深刻改变软件开发方式。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://huggingface.co/blog/is-it-agentic-enough" target="_blank" rel="noopener">Is it agentic enough? Benchmarking open models on your own tooling</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;HuggingFaceBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-17</span>
+    <span class="score-badge score-9">9/10</span>
+  </div>
+  <div class="keywords"><span class="kw">agent benchmark</span><span class="kw">tool calling</span><span class="kw">open models</span></div>
+  <div class="summary">本文讨论如何对开源大语言模型在自定义工具调用场景下的智能体能力进行基准测试。重点关注开放模型在工具使用和智能体任务中的表现评估。提供了一套用于衡量模型是否具备足够智能体能力的评测框架。对希望在自有工具链上部署开源LLM的研究者和工程师具有重要参考价值。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20002v1" target="_blank" rel="noopener">Connect the Dots: Training LLMs for Long-Lifecycle Agents with Cross-Domain Generalization Via Reinforcement Learning</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yanxi Chen, Weijie Shi, Yuexiang Xie 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">强化学习</span><span class="kw">长生命周期智能体</span><span class="kw">跨域泛化</span><span class="kw">元能力</span></div>
+  <div class="summary">本文提出CoD（Connect the Dots）框架，用于训练LLM具备长生命周期智能体所需的元能力：在持续与环境交互中自主学习、更新上下文并逐步提升未来任务表现。框架包含端到端强化学习算法设计（GRPO风格含细粒度信用分配）及专门设计的任务和环境。实验验证了端到端RL训练的有效性，并展示了跨域泛化能力，包括训练域内、跨不同域以及向Ralph循环设置的迁移。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19893v1" target="_blank" rel="noopener">MetaResearcher: Scaling Deep Research via Self-Reflective Reinforcement Learning in Adversarial Virtual Environments</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-9">9/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Wei Yu, Suxing Liu, Minjie Yu 等</span>
+  </div>
+  <div class="keywords"><span class="kw">深度研究智能体</span><span class="kw">多智能体</span><span class="kw">GRPO强化学习</span></div>
+  <div class="summary">本文提出MetaResearcher框架，通过四个维度扩展深度研究智能体的训练能力。引入引入对抗性虚假信息的演化虚拟世界、面向发现的任务设计、基于GRPO的自反思元奖励机制以及异构多智能体群体架构。该框架能同时优化答案正确性、搜索路径效率、反思深度和工具调用多样性，解决了先前工作中的重复动作循环问题。在GAIA等基准上验证其性能提升和对抗鲁棒性。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://huggingface.co/papers/2606.16827" target="_blank" rel="noopener">No Resource, No Benchmarks, No Problem? Evaluating and Improving LLMs for Code Generation in No-Resource Languages</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;HFDailyPapers</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-15</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Alessandro Giagnorio, Alberto Martin-Lopez, Gabriele Bavota</span>
+  </div>
+  <div class="keywords"><span class="kw">代码生成</span><span class="kw">低资源语言</span><span class="kw">指令微调</span></div>
+  <div class="summary">本研究针对无资源编程语言的代码生成挑战，构建了评测基准，并提出结合进一步预训练与权重差异迁移的方法，以较低计算成本创建专用指令跟随模型。该方法有效提升了LLM在低资源编程语言上的代码生成能力。研究填补了该领域基准测试的空白，为低资源场景下的代码生成提供了实用解决方案。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://www.langchain.com/blog/how-we-build-evals-for-deep-agents" target="_blank" rel="noopener">How we build evals for Deep Agents</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;LangChainBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-16</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">Agent评测</span><span class="kw">数据策划</span><span class="kw">评估指标</span></div>
+  <div class="summary">本文介绍了如何为深度Agent构建有针对性的评估体系。内容涵盖数据策划、评估指标设计以及测试策略等核心环节。目标是通过精准评测来衡量Agent的真实行为表现。文章提供了提升Agent准确性的实践方法论。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="https://huggingface.co/blog/ServiceNow/mosaicleaks" target="_blank" rel="noopener">MosaicLeaks: Can your research agent keep a secret?</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;HuggingFaceBlog</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-8">8/10</span>
+  </div>
+  <div class="keywords"><span class="kw">research agent</span><span class="kw">information leakage</span><span class="kw">agent security</span></div>
+  <div class="summary">本文探讨研究型智能体在处理敏感信息时的保密能力问题。以MosaicLeaks为主题，测试LLM Agent是否会泄露机密或私有信息。涉及智能体的安全性与信息隔离能力评估。对Agent在企业级应用中的安全部署具有重要意义。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20408v1" target="_blank" rel="noopener">LLM agent safety, multi-turn red-teaming, jailbreak benchmarks, adversarial robustness, safety-critical systems</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Hanwool Lee, Dasol Choi, Bokyeong Kim 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent安全</span><span class="kw">多轮红队测试</span><span class="kw">对抗鲁棒性</span><span class="kw">安全关键系统</span><span class="kw">越狱基准</span></div>
+  <div class="summary">本文提出NRT-Bench，一个针对安全关键系统中LLM智能体的多轮红队测试基准，实例化为模拟核电站控制室场景。五角色操作员团队由可配置LLM支持，对抗者通过四个通道注入消息进行多轮自适应攻击。实验发现自适应多轮攻击能可靠地突破安全限制，8.7%至12.1%的攻击会话导致安全功能失效。研究还发现不同模型的漏洞几乎不重叠，且相同防御措施对不同模型效果截然不同。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20373v1" target="_blank" rel="noopener">AutoPass: Evidence-Guided LLM Agents for Compiler Performance Tuning</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Zepeng Li, Jie Ren, Zhanyong Tang 等</span>
+  </div>
+  <div class="keywords"><span class="kw">multi-agent</span><span class="kw">代码优化</span><span class="kw">工具调用</span><span class="kw">编译器调优</span><span class="kw">inference-only</span></div>
+  <div class="summary">AutoPass是一个用于编译器性能调优的多智能体框架，利用编译器和运行时证据指导LLM生成优化决策。该框架将编译器内部状态暴露给LLM，使其能够查询优化状态并分析中间表示来编排编译器选项。搜索过程通过迭代精炼优化配置并利用运行时反馈诊断性能回退。AutoPass无需离线训练或任务特定微调，在x86-64和ARM64平台上均超越了专家调优启发式方法。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.20245v1" target="_blank" rel="noopener">Navigating Unreliable Parametric and Contextual Knowledge: Explicit Knowledge Conflict Resolution for LLM Inference</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Huang Peng, Jiuyang Tang, Weixin Zeng 等</span>
+  </div>
+  <div class="keywords"><span class="kw">知识冲突</span><span class="kw">多智能体推理</span><span class="kw">RAG</span><span class="kw">知识检索</span><span class="kw">LLM推理</span></div>
+  <div class="summary">MACR框架针对LLM推理中参数知识与上下文知识的冲突问题提出了显式冲突解决机制。框架首先采用改进的语义熵度量自适应评估LLM对查询的置信度，并据此决定外化内部知识或检索外部知识。随后引入包含三个专用智能体的归纳多智能体推理框架，分别负责归纳规则、分析冲突和解决不一致。实验表明MACR在多个基准上显著超越现有基准方法，并提供可解释的冲突解决结果。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19847v1" target="_blank" rel="noopener">AtomMem: Building Simple and Effective Memory System for LLM Agents via Atomic Facts</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Yanyu Yao, Shangze Li, Zhi Zheng 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">长期记忆</span><span class="kw">原子事实</span></div>
+  <div class="summary">本文提出AtomMem，一种基于原子事实的LLM智能体长期记忆系统，旨在实现高密度存储与稳定的记忆演化。系统引入Fact Executor从长文本交互中选择性提取高价值原子事实作为记忆表示，并将其组织为层次化事件结构和时间档案。检索时通过联想记忆图连接碎片化记忆，在LoCoMo基准上取得了最先进的性能。该方案为部署个性化智能体提供了可扩展且经济可行的解决方案。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19787v1" target="_blank" rel="noopener">ORAgentBench: Can LLM Agents Solve Challenging Operations Research Tasks End to End?</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-18</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Jiajun Li, Mingshu Cai, Yixuan Li 等</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">基准评测</span><span class="kw">代码生成</span><span class="kw">多步骤任务</span></div>
+  <div class="summary">ORAgentBench是一个以执行为基础的基准，用于评测自主LLM Agent在端到端运筹学任务中的能力。该基准包含107个人工审核的任务，涵盖多种操作场景，每个任务配备隔离环境、自然语言说明、多文件数据和提交模式。实验表明，当前最佳Agent仅通过35.51%的任务，且许多可行解仍低于所需质量阈值。失败分析显示主要错误来自策略性缺陷，包括遗漏操作规则、脆弱的问题建模等。研究表明，OR领域Agent的进步需要超越生成可信优化代码，走向可靠的高质量决策制定。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19559v1" target="_blank" rel="noopener">Uncertainty Decomposition for Clarification Seeking in LLM Agents</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-17</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Gregory Matsnev</span>
+  </div>
+  <div class="keywords"><span class="kw">LLM Agent</span><span class="kw">不确定性分解</span><span class="kw">澄清寻求</span><span class="kw">提示方法</span><span class="kw">任务规划</span></div>
+  <div class="summary">本文针对LLM Agent在交互场景中的不确定性分解问题，提出基于提示的方法将动作置信度与请求不确定性分离，使Agent能够在任务规范模糊时主动寻求澄清。构建了两个澄清增强基准WebShop-Clarification和ALFWorld-Clarification，系统评估所提方法在五个LLM骨干上的表现。实验表明该方法在澄清F1指标上显著优于ReAct+UE和UAM基线，且改进效果在不同骨干模型上具有普遍性。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19319v1" target="_blank" rel="noopener">Data Intelligence Agents: Interpreting, Modeling, and Querying Enterprise Data via Autonomous Coding Agents</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-17</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Anoushka Vyas, Aarushi Dhanuka, Sina Khoshfetrat Pakazad 等</span>
+  </div>
+  <div class="keywords"><span class="kw">autonomous coding agent</span><span class="kw">code generation</span><span class="kw">tool use</span></div>
+  <div class="summary">本文提出数据智能智能体（DIA）系统，由数据解释器、模式创建器和查询生成器三个自主编码智能体组成，用于压缩企业数据集成工作流。智能体以生成、执行、验证和修复具体代码制品为核心，并共享记忆库以复用经验。该系统已在生产环境中为企业客户部署，查询生成器在七个SQL基准上的四种方言和四类任务中均达到或超过最优已发布结果。研究表明基于执行的自主编码智能体架构可跨数据智能工作负载泛化。</div>
+</div>
+<div class="item-card">
+  <div class="item-title"><a href="http://arxiv.org/abs/2606.19308v1" target="_blank" rel="noopener">Enhancing Decision-Making with Large Language Models through Multi-Agent Fictitious Play</a></div>
+  <div class="item-meta">
+    <span class="meta-badge"><strong>来源</strong>&nbsp;arxiv</span>
+    <span class="meta-badge"><strong>日期</strong>&nbsp;2026-06-17</span>
+    <span class="score-badge score-8">8/10</span>
+    <span class="meta-badge"><strong>作者</strong>&nbsp;Leyang Shen, Yang Zhang, Xiaoyan Zhao 等</span>
+  </div>
+  <div class="keywords"><span class="kw">多智能体</span><span class="kw">博弈论</span><span class="kw">决策推理</span></div>
+  <div class="summary">本文针对多智能体系统在决策任务中面临的姿态纠缠问题，提出多智能体虚构博弈（MAFP）范式。MAFP将利益相关者立场建模为独立Agent，将决策过程形式化为博弈论中的均衡求解过程，通过迭代更新各Agent决策来暴露并弥补彼此弱点。实验在竞争性决策场景中评估，MAFP在锦标赛强度和鲁棒性两项指标上均优于单轮及多轮基线方法。</div>
+</div>
+</div>
+</div>
+
+<footer>
+  <div>LLM 前沿技术周报 · 2026-W25 · 生成时间：2026-06-22 10:22 CST · 处理耗时：469s</div>
+  <div style="margin-top:5px;color:#475569;">由 Claude AI 辅助生成，内容来源：arXiv · 量子位 · 机器之心</div>
+</footer>
+
+</body>
+</html>

@@ -57,3 +57,8 @@ class KeywordFilter:
 
         logger.info(f"[keyword_filter] {len(items)} in → {len(passed)} pass, {filtered} filtered")
         return passed
+
+    def score(self, item: RawItem) -> int:
+        """返回条目命中方向关键词的方向数（用于候选排序）"""
+        text = f"{item.title} {item.abstract}"
+        return sum(1 for p in self._dir_patterns.values() if p.search(text))

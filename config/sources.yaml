@@ -1,10 +1,15 @@
+hf_daily_papers:
+  enabled: true
+  lookback_days: 8      # 回溯天数，与 arxiv lookback_hours 保持一致
+  min_upvotes: 0        # 最低 upvotes 过滤，0 = 不过滤
+
 arxiv:
   enabled: true
   categories:
     - cs.CL   # Computation and Language
     - cs.AI   # Artificial Intelligence
     - cs.LG   # Machine Learning
-  max_results: 500
+  max_results: 3000
   lookback_hours: 192   # 周报回溯 8 天（7天+1天缓冲）
 
 rss:

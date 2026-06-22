@@ -422,7 +422,8 @@ def _update_index(output_dir: str, latest_label: str, date_range: tuple, latest_
 </body>
 </html>"""
 
-    with open("index.html", "w", encoding="utf-8") as f:
+    index_path = str(P(output_dir).parent / "index.html")
+    with open(index_path, "w", encoding="utf-8") as f:
         f.write(index_html)
 
 

@@ -77,6 +77,12 @@ directions:
   post_training:
     en:
       - DPO
+      - RLHF
+      - RLAIF
+      - PPO
+      - reward model
+      - reward modeling
+      - reward hacking
       - alignment
       - instruction tuning
       - instruction following
@@ -219,7 +225,9 @@ directions:
       - 结构化输出
       - 提示工程
 
-# 全局排除词（内容含这些词且不含方向词则排除）
+# 全局排除词（内容命中且不含任何方向词时才排除）
+# 注意：LLM 后训练相关的 RLHF / PPO / reward model 已移到 post_training；
+# 这里只保留真正与 LLM 研究无关的纯领域词。
 exclude:
   en:
     - medical imaging
@@ -232,20 +240,13 @@ exclude:
     - remote sensing
     - satellite imagery
     - climate model
-    - computer vision
     - image classification
-    - image generation
-    - diffusion model
+    - image segmentation
+    - object detection
     - text-to-image
+    - text to image
     - video generation
-    - reinforcement learning from
-    - RLHF
-    - RLAIF
-    - PPO
-    - reward model
-    - reward hacking
-    - reward shaping
-    - offline RL
+    - image generation
   zh:
     - 医学影像
     - 药物发现
@@ -253,6 +254,4 @@ exclude:
     - 遥感
     - 图像生成
     - 视频生成
-    - 扩散模型
-    - 强化学习
-    - 奖励模型
+    - 文生图
